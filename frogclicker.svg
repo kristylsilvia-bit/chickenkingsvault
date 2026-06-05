@@ -1,0 +1,78 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="35%" r="65%">
+      <stop offset="0%"  stop-color="#0a2820"/>
+      <stop offset="70%" stop-color="#041108"/>
+      <stop offset="100%" stop-color="#000"/>
+    </radialGradient>
+    <radialGradient id="eyeGrad" cx="40%" cy="30%" r="70%">
+      <stop offset="0%"  stop-color="#e8ff9c"/>
+      <stop offset="50%" stop-color="#AAFF00"/>
+      <stop offset="100%" stop-color="#4f7d00"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="glowLarge">
+      <feGaussianBlur stdDeviation="5.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- background: dark water -->
+  <rect width="400" height="400" fill="url(#bgGrad)"/>
+
+  <!-- water surface shimmer (top) -->
+  <ellipse cx="200" cy="0" rx="280" ry="60" fill="rgba(63,230,196,0.08)"/>
+
+  <!-- main frog body (subtle, below eyes) -->
+  <ellipse cx="200" cy="240" rx="85" ry="95" fill="#0d3a2a" opacity="0.65"/>
+
+  <!-- left eye glow halo -->
+  <circle cx="140" cy="140" r="62" fill="#AAFF00" opacity="0.15" filter="url(#glowLarge)"/>
+
+  <!-- right eye glow halo -->
+  <circle cx="260" cy="140" r="62" fill="#AAFF00" opacity="0.15" filter="url(#glowLarge)"/>
+
+  <!-- left eye -->
+  <circle cx="140" cy="140" r="48" fill="url(#eyeGrad)" filter="url(#glow)"/>
+  <circle cx="140" cy="140" r="48" fill="none" stroke="#0a3a0a" stroke-width="3"/>
+  <!-- left pupil -->
+  <ellipse cx="140" cy="148" rx="16" ry="22" fill="#020805"/>
+  <!-- left highlight -->
+  <circle cx="130" cy="125" r="9" fill="#f4ffe0" opacity="0.95"/>
+
+  <!-- right eye -->
+  <circle cx="260" cy="140" r="48" fill="url(#eyeGrad)" filter="url(#glow)"/>
+  <circle cx="260" cy="140" r="48" fill="none" stroke="#0a3a0a" stroke-width="3"/>
+  <!-- right pupil -->
+  <ellipse cx="260" cy="148" rx="16" ry="22" fill="#020805"/>
+  <!-- right highlight -->
+  <circle cx="270" cy="125" r="9" fill="#f4ffe0" opacity="0.95"/>
+
+  <!-- subtle mouth / smile -->
+  <path d="M 160 200 Q 200 225 240 200" fill="none" stroke="#3fe6c4" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- bioluminescent spot (center chest) -->
+  <circle cx="200" cy="260" r="14" fill="#3fe6c4" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="200" cy="260" r="22" fill="#3fe6c4" opacity="0.15" filter="url(#glowLarge)"/>
+
+  <!-- side bioluminescent accents -->
+  <circle cx="110" cy="220" r="8" fill="#AAFF00" opacity="0.6" filter="url(#glow)"/>
+  <circle cx="110" cy="220" r="14" fill="#AAFF00" opacity="0.12"/>
+  <circle cx="290" cy="220" r="8" fill="#AAFF00" opacity="0.6" filter="url(#glow)"/>
+  <circle cx="290" cy="220" r="14" fill="#AAFF00" opacity="0.12"/>
+
+  <!-- water ripple (bottom) -->
+  <g opacity="0.25" stroke="#3fe6c4" stroke-width="1.5" fill="none">
+    <circle cx="200" cy="320" r="35"/>
+    <circle cx="200" cy="320" r="55"/>
+  </g>
+</svg>

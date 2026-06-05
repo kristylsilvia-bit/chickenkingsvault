@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Midnight Bayou — Fly Hunt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root{
+  /* Palette — black water, deep swamp greens, bioluminescent accents */
+  --bg-0:        #02070a;   /* deepest black water */
+  --bg-1:        #051210;   /* swamp base */
+  --bg-2:        #07201a;   /* shallows */
+  --panel:       rgba(8, 28, 24, 0.62);
+  --panel-edge:  rgba(120, 255, 170, 0.10);
+  --panel-glass: rgba(10, 34, 28, 0.78);
+
+  --lime:        #AAFF00;   /* electric lime — primary bioluminescence */
+  --lime-dim:    #6fa800;
+  --teal:        #3fe6c4;   /* soft teal glow */
+  --teal-dim:    #1c8f78;
+  --gold:        #ffcf4d;   /* "newly affordable" attention */
+
+  --ink:         #d6f3e2;   /* primary text */
+  --ink-soft:    #8fb3a3;   /* secondary text */
+  --ink-faint:   #4f6b5f;   /* tertiary / locked */
+
+  --ok:          #AAFF00;
+  --bad:         #2c4138;
+
+  /* Glows */
+  --glow-lime:   0 0 18px rgba(170,255,0,0.55), 0 0 42px rgba(170,255,0,0.22);
+  --glow-teal:   0 0 16px rgba(63,230,196,0.45);
+
+  /* Geometry */
+  --r-lg: 18px;
+  --r-md: 14px;
+  --r-sm: 10px;
+  --col-w: 330px;
+  --gap: 22px;
+
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-mono: "Space Mono", "SFMono-Regular", monospace;
+}
+
+/* ============================================================
+   RESET / BASE
+   ============================================================ */
+*{ box-sizing:border-box; margin:0; padding:0; }
+html,body{ height:100%; }
+body{
+  font-family: var(--font-mono);
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 800px at 50% -10%, #0a261f 0%, transparent 60%),
+    radial-gradient(900px 700px at 85% 110%, #04140f 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 70%, #000 100%);
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+  -webkit-font-smoothing:antialiased;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* faint vignette + grain feel */
+body::after{
+  content:"";
+  position:fixed; inset:0;
+  pointer-events:none;
+  background: radial-gradient(120% 120% at 50% 40%, transparent 55%, rgba(0,0,0,0.55) 100%);
+  z-index:5;
+}
+
+/* ============================================================
+   ATMOSPHERIC BACKGROUND (lily pads + fireflies)
+   ============================================================ */
+#atmos{ position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+
+.pad{
+  position:absolute;
+  border-radius:50%;
+  background: radial-gradient(circle at 38% 32%, #103027 0%, #0a201a 55%, #061310 100%);
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.4);
+  opacity:0.55;
+  filter: blur(0.4px);
+  animation: drift linear infinite;
+}
+/* the lily-pad notch */
+.pad::before{
+  content:"";
+  position:absolute;
+  top:50%; left:50%;
+  width:52%; height:14%;
+  background: var(--bg-0);
+  transform-origin:left center;
+  transform: translateY(-50%) rotate(var(--notch,28deg));
+  border-radius:4px;
+}
+/* a faint bioluminescent rim on some pads */
+.pad.lit{ box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 0 26px rgba(63,230,196,0.10); }
+
+@keyframes drift{
+  0%   { transform: translate(0,0) rotate(0deg); }
+  50%  { transform: translate(var(--dx,30px), var(--dy,-24px)) rotate(8deg); }
+  100% { transform: translate(0,0) rotate(0deg); }
+}
+
+.firefly{
+  position:absolute;
+  width:4px; height:4px;
+  border-radius:50%;
+  background: var(--lime);
+  box-shadow: 0 0 8px 2px rgba(170,255,0,0.8);
+  opacity:0;
+  animation: blinkfly ease-in-out infinite;
+}
+@keyframes blinkfly{
+  0%,100%{ opacity:0; transform: translate(0,0) scale(0.6); }
+  45%    { opacity:0.9; }
+  55%    { opacity:0.95; transform: translate(6px,-8px) scale(1); }
+  70%    { opacity:0; }
+}
+
+/* ============================================================
+   APP SHELL
+   ============================================================ */
+#app{ position:relative; z-index:10; max-width:1180px; margin:0 auto; padding:26px 22px 90px; }
+
+header.brand{
+  text-align:center;
+  margin-bottom:26px;
+}
+header.brand .kicker{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.42em;
+  text-transform:uppercase;
+  color:var(--teal);
+  opacity:0.8;
+  margin-bottom:6px;
+}
+header.brand h1{
+  font-family:var(--font-display);
+  font-weight:900;
+  font-size:clamp(30px, 5vw, 54px);
+  line-height:1;
+  letter-spacing:0.01em;
+  color:var(--ink);
+  text-shadow: 0 0 30px rgba(63,230,196,0.18);
+}
+header.brand h1 em{
+  font-style:italic;
+  color:var(--lime);
+  text-shadow: var(--glow-lime);
+}
+
+/* layout: three columns */
+.grid{
+  display:grid;
+  grid-template-columns: var(--col-w) 1fr var(--col-w);
+  gap: var(--gap);
+  align-items:start;
+}
+
+.panel{
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: var(--r-lg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 18px 50px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.03);
+  padding:18px;
+}
+.panel > .panel-title{
+  font-family:var(--font-display);
+  font-style:italic;
+  font-weight:700;
+  font-size:20px;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.panel > .panel-sub{
+  font-size:10px; letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--ink-soft); margin-bottom:16px;
+}
+
+/* ============================================================
+   CENTER — CLICKER + COUNTER
+   ============================================================ */
+.center{ display:flex; flex-direction:column; align-items:center; }
+
+.counter-wrap{ text-align:center; margin-bottom:6px; }
+.counter{
+  font-family:var(--font-mono);
+  font-weight:700;
+  font-size:clamp(40px, 7vw, 66px);
+  line-height:1;
+  letter-spacing:-0.02em;
+  color:var(--lime);
+  text-shadow: var(--glow-lime);
+  font-variant-numeric: tabular-nums;
+}
+.counter-label{
+  font-family:var(--font-display);
+  font-style:italic;
+  font-size:18px;
+  color:var(--ink);
+  margin-top:4px;
+}
+.fps{
+  font-family:var(--font-mono);
+  font-size:13px;
+  color:var(--teal);
+  margin-top:8px;
+  letter-spacing:0.04em;
+}
+.fps b{ color:var(--ink); font-weight:700; }
+
+/* stage holds the frog + all click effects */
+.stage{
+  position:relative;
+  width:min(380px, 78vw);
+  height:min(420px, 80vw);
+  margin-top:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* water shimmer reflection under the frog */
+.reflection{
+  position:absolute;
+  bottom:6%;
+  width:62%;
+  height:14%;
+  border-radius:50%;
+  background: radial-gradient(ellipse at center, rgba(170,255,0,0.30), rgba(63,230,196,0.12) 45%, transparent 72%);
+  filter: blur(6px);
+  animation: shimmer 4.5s ease-in-out infinite;
+  z-index:0;
+}
+@keyframes shimmer{
+  0%,100%{ transform: scaleX(1) translateX(0); opacity:0.55; }
+  50%    { transform: scaleX(1.12) translateX(2%); opacity:0.85; }
+}
+
+/* the frog button */
+#frog{
+  position:relative;
+  width:78%;
+  cursor:pointer;
+  z-index:2;
+  -webkit-touch-callout:none;
+  transition: filter .2s ease;
+  filter: drop-shadow(0 18px 26px rgba(0,0,0,0.55));
+}
+#frog:hover{ filter: drop-shadow(0 18px 30px rgba(0,0,0,0.6)) drop-shadow(0 0 18px rgba(170,255,0,0.18)); }
+#frog svg{ display:block; width:100%; height:auto; overflow:visible; }
+
+/* idle breathing on the whole body group */
+.frog-breathe{
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: breathe 3.6s ease-in-out infinite;
+}
+@keyframes breathe{
+  0%,100%{ transform: scale(1,1); }
+  50%    { transform: scale(1.018, 0.985); }
+}
+
+/* squash-and-stretch on click (spring-y) */
+#frog.squish{ animation: squash 420ms cubic-bezier(.18,.9,.28,1.4); }
+@keyframes squash{
+  0%   { transform: scale(1,1); }
+  18%  { transform: scale(1.14, 0.82); }   /* squash down */
+  42%  { transform: scale(0.92, 1.12); }   /* stretch up rebound */
+  64%  { transform: scale(1.05, 0.96); }
+  82%  { transform: scale(0.985,1.015); }
+  100% { transform: scale(1,1); }
+}
+
+/* eyelids — blink */
+.eyelid{
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  transform: scaleY(0);
+}
+.frog-blink .eyelid{ animation: blink 240ms ease-in-out; }
+@keyframes blink{
+  0%   { transform: scaleY(0); }
+  45%  { transform: scaleY(1); }
+  100% { transform: scaleY(0); }
+}
+
+/* click effect elements */
+.ripple{
+  position:absolute;
+  border:2px solid rgba(170,255,0,0.7);
+  border-radius:50%;
+  width:24px; height:24px;
+  transform: translate(-50%,-50%) scale(0.2);
+  pointer-events:none;
+  z-index:3;
+  animation: ripple 700ms ease-out forwards;
+}
+@keyframes ripple{
+  0%  { opacity:0.85; transform: translate(-50%,-50%) scale(0.2); }
+  100%{ opacity:0; transform: translate(-50%,-50%) scale(7); }
+}
+
+.plusone{
+  position:absolute;
+  font-family:var(--font-mono);
+  font-weight:700;
+  font-size:20px;
+  color:var(--lime);
+  text-shadow: var(--glow-lime);
+  pointer-events:none;
+  transform: translate(-50%,-50%);
+  z-index:4;
+  animation: floatUp 900ms ease-out forwards;
+}
+@keyframes floatUp{
+  0%  { opacity:0; transform: translate(-50%,-50%) scale(0.7); }
+  20% { opacity:1; transform: translate(-50%,-90%) scale(1.05); }
+  100%{ opacity:0; transform: translate(-50%,-220%) scale(1); }
+}
+
+/* fly particles */
+.fly{
+  position:absolute;
+  width:6px; height:6px;
+  border-radius:50%;
+  background: var(--ink);
+  box-shadow: 0 0 6px rgba(170,255,0,0.6);
+  pointer-events:none;
+  z-index:3;
+  transform: translate(-50%,-50%);
+  animation: flyArc 850ms ease-out forwards;
+}
+.fly::before, .fly::after{
+  content:""; position:absolute; top:-2px;
+  width:7px; height:5px; border-radius:50%;
+  background: rgba(214,243,226,0.55);
+}
+.fly::before{ left:-6px; transform: rotate(-18deg); }
+.fly::after{ left:5px; transform: rotate(18deg); }
+@keyframes flyArc{
+  0%  { opacity:0; transform: translate(-50%,-50%) scale(0.5); }
+  15% { opacity:1; }
+  100%{ opacity:0;
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.9) rotate(var(--rot)); }
+}
+
+/* ============================================================
+   SHOP CARDS (upgrades left / producers right)
+   ============================================================ */
+.shop-list{ display:flex; flex-direction:column; gap:11px; }
+
+.card{
+  position:relative;
+  display:grid;
+  grid-template-columns: 40px 1fr auto;
+  gap:11px;
+  align-items:center;
+  padding:12px 13px;
+  border-radius: var(--r-md);
+  background: linear-gradient(180deg, rgba(14,40,33,0.7), rgba(8,24,20,0.7));
+  border:1px solid rgba(120,255,170,0.08);
+  cursor:pointer;
+  transition: transform .16s ease, box-shadow .2s ease, border-color .2s ease, opacity .2s ease;
+  overflow:hidden;
+}
+.card .ic{
+  width:40px; height:40px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:10px;
+  background: rgba(170,255,0,0.06);
+  border:1px solid rgba(170,255,0,0.14);
+}
+.card .ic svg{ width:24px; height:24px; }
+.card .body .name{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:15px;
+  color:var(--ink);
+  line-height:1.1;
+}
+.card .body .meta{
+  font-size:10.5px;
+  color:var(--ink-soft);
+  margin-top:3px;
+  letter-spacing:0.02em;
+}
+.card .right{ text-align:right; }
+.card .cost{
+  font-family:var(--font-mono);
+  font-weight:700;
+  font-size:14px;
+  color:var(--lime);
+  white-space:nowrap;
+}
+.card .cost.cant{ color:var(--ink-faint); }
+.card .owned-badge{
+  display:inline-block;
+  margin-top:5px;
+  min-width:22px;
+  padding:1px 7px;
+  font-family:var(--font-mono);
+  font-size:11px; font-weight:700;
+  color:var(--bg-0);
+  background:var(--teal);
+  border-radius:8px;
+}
+
+/* affordable */
+.card.affordable:hover{
+  transform: translateY(-3px);
+  border-color: rgba(170,255,0,0.4);
+  box-shadow: 0 12px 26px rgba(0,0,0,0.45), 0 0 22px rgba(170,255,0,0.12);
+}
+/* locked / can't afford */
+.card.locked{
+  opacity:0.46;
+  cursor:not-allowed;
+  filter:saturate(0.4);
+}
+.card.locked .ic{ background:rgba(255,255,255,0.02); border-color:rgba(255,255,255,0.05); }
+
+/* newly-affordable gold pulse */
+.card.pulse{ animation: goldpulse 1.6s ease-in-out infinite; border-color: rgba(255,207,77,0.5); }
+@keyframes goldpulse{
+  0%,100%{ box-shadow: 0 0 0 rgba(255,207,77,0); }
+  50%    { box-shadow: 0 0 24px rgba(255,207,77,0.45), inset 0 0 14px rgba(255,207,77,0.10); border-color: rgba(255,207,77,0.85); }
+}
+
+/* purchase confirm flash */
+.card.flash::after{
+  content:"";
+  position:absolute; inset:0;
+  background: radial-gradient(circle at 50% 50%, rgba(170,255,0,0.55), transparent 70%);
+  animation: flashfade 420ms ease-out forwards;
+  pointer-events:none;
+}
+@keyframes flashfade{ 0%{opacity:0.9;} 100%{opacity:0;} }
+
+/* owned upgrade */
+.card.bought{ cursor:default; opacity:0.8; }
+.card.bought .ic{ background:rgba(63,230,196,0.10); border-color:rgba(63,230,196,0.3); }
+.card.bought .cost{ color:var(--teal); font-size:12px; }
+.card.bought:hover{ transform:none; box-shadow:none; }
+
+/* ============================================================
+   RIGHT PANEL — producer contribution readout (in same cards)
+   ============================================================ */
+.contrib{
+  font-size:10px; color:var(--teal);
+  margin-top:2px; letter-spacing:0.02em;
+}
+
+/* totals row in right panel */
+.totals{
+  margin-top:16px; padding-top:14px;
+  border-top:1px dashed rgba(120,255,170,0.16);
+  display:flex; justify-content:space-between; align-items:baseline;
+}
+.totals .lab{ font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--ink-soft); }
+.totals .val{ font-family:var(--font-mono); font-weight:700; color:var(--lime); font-size:16px; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer.bar{
+  position:fixed; left:0; right:0; bottom:0;
+  z-index:20;
+  display:flex; align-items:center; justify-content:center; gap:14px;
+  padding:10px;
+  background: linear-gradient(0deg, rgba(2,7,10,0.92), rgba(2,7,10,0.0));
+  font-size:12px;
+}
+footer.bar .status{ color:var(--ink-soft); margin-right:6px; }
+footer.bar .status b{ color:var(--teal); }
+.btn{
+  font-family:var(--font-mono); font-weight:700; font-size:12px;
+  letter-spacing:0.06em;
+  color:var(--ink);
+  background: rgba(170,255,0,0.08);
+  border:1px solid rgba(170,255,0,0.28);
+  padding:7px 14px; border-radius:9px; cursor:pointer;
+  transition: background .15s ease, transform .1s ease, box-shadow .2s ease;
+}
+.btn:hover{ background: rgba(170,255,0,0.16); box-shadow: var(--glow-lime); }
+.btn:active{ transform: translateY(1px); }
+.btn.danger{ color:#ffb4a8; background:rgba(255,80,60,0.08); border-color:rgba(255,80,60,0.3); }
+.btn.danger:hover{ background:rgba(255,80,60,0.16); box-shadow:0 0 16px rgba(255,80,60,0.4); }
+
+/* ============================================================
+   MODAL — export / import save
+   ============================================================ */
+.modal-overlay{
+  position:fixed; inset:0; z-index:50;
+  display:flex; align-items:center; justify-content:center;
+  background: rgba(2,7,10,0.78);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  padding:20px;
+  animation: fadein .18s ease;
+}
+.modal-overlay[hidden]{ display:none; }
+@keyframes fadein{ from{opacity:0;} to{opacity:1;} }
+.modal-box{
+  width:min(520px, 94vw);
+  background: var(--panel-glass);
+  border:1px solid rgba(170,255,0,0.22);
+  border-radius: var(--r-lg);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 40px rgba(170,255,0,0.08);
+  padding:22px;
+  animation: rise .22s cubic-bezier(.2,.8,.3,1.1);
+}
+@keyframes rise{ from{ transform: translateY(14px) scale(.98); opacity:0; } to{ transform:none; opacity:1; } }
+.modal-title{ font-family:var(--font-display); font-style:italic; font-weight:700; font-size:24px; color:var(--ink); }
+.modal-sub{ font-size:12px; color:var(--ink-soft); margin:8px 0 14px; line-height:1.55; }
+.modal-box textarea{
+  width:100%; height:120px; resize:vertical;
+  font-family:var(--font-mono); font-size:12px; line-height:1.55;
+  color:var(--lime); background: rgba(2,12,9,0.85);
+  border:1px solid rgba(120,255,170,0.18); border-radius: var(--r-sm);
+  padding:12px; word-break:break-all;
+}
+.modal-box textarea:focus{ outline:none; border-color: rgba(170,255,0,0.5); box-shadow: 0 0 16px rgba(170,255,0,0.15); }
+.modal-actions{ display:flex; gap:10px; margin-top:14px; }
+.modal-msg{ font-size:12px; color:var(--teal); margin-top:10px; min-height:16px; }
+
+/* ============================================================
+   RESPONSIVE — stack columns
+   ============================================================ */
+@media (max-width: 960px){
+  .grid{ grid-template-columns: 1fr; }
+  .center{ order:-1; }            /* frog first on mobile */
+  .panel{ padding:16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- atmospheric background layer -->
+<div id="atmos" aria-hidden="true"></div>
+
+<div id="app">
+  <header class="brand">
+    <div class="kicker">A Bioluminescent Idle Hunt</div>
+    <h1>Midnight <em>Bayou</em></h1>
+  </header>
+
+  <div class="grid">
+
+    <!-- LEFT : UPGRADES -->
+    <section class="panel" id="upgradePanel">
+      <div class="panel-title">Upgrades</div>
+      <div class="panel-sub">One-time enchantments</div>
+      <div class="shop-list" id="upgradeList"></div>
+    </section>
+
+    <!-- CENTER : CLICKER -->
+    <section class="center">
+      <div class="counter-wrap">
+        <div class="counter" id="flyCount">0</div>
+        <div class="counter-label">Flies Caught</div>
+        <div class="fps">catching <b id="fpsVal">0</b> flies / second</div>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="reflection"></div>
+        <!-- FROG SVG -->
+        <div id="frog" role="button" aria-label="Catch a fly">
+          <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="bodyGrad" cx="42%" cy="35%" r="75%">
+                <stop offset="0%"  stop-color="#1d5c43"/>
+                <stop offset="55%" stop-color="#113c2c"/>
+                <stop offset="100%" stop-color="#08231a"/>
+              </radialGradient>
+              <radialGradient id="bellyGrad" cx="50%" cy="45%" r="65%">
+                <stop offset="0%"  stop-color="#2a7a55"/>
+                <stop offset="100%" stop-color="#114030"/>
+              </radialGradient>
+              <radialGradient id="eyeGrad" cx="40%" cy="35%" r="70%">
+                <stop offset="0%"  stop-color="#e8ff9c"/>
+                <stop offset="45%" stop-color="#AAFF00"/>
+                <stop offset="100%" stop-color="#4f7d00"/>
+              </radialGradient>
+              <radialGradient id="spotGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%"  stop-color="#3fe6c4"/>
+                <stop offset="100%" stop-color="rgba(63,230,196,0)"/>
+              </radialGradient>
+              <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="2.2"/>
+              </filter>
+            </defs>
+
+            <!-- everything that breathes -->
+            <g class="frog-breathe">
+              <!-- back feet -->
+              <ellipse cx="64"  cy="244" rx="34" ry="16" fill="#0c2c20"/>
+              <ellipse cx="236" cy="244" rx="34" ry="16" fill="#0c2c20"/>
+              <!-- toes -->
+              <g fill="#0e3526">
+                <ellipse cx="44" cy="252" rx="9" ry="6"/><ellipse cx="62" cy="256" rx="9" ry="6"/><ellipse cx="80" cy="252" rx="9" ry="6"/>
+                <ellipse cx="220" cy="252" rx="9" ry="6"/><ellipse cx="238" cy="256" rx="9" ry="6"/><ellipse cx="256" cy="252" rx="9" ry="6"/>
+              </g>
+
+              <!-- main body -->
+              <path d="M150 96
+                       C 96 96, 58 134, 58 184
+                       C 58 232, 100 262, 150 262
+                       C 200 262, 242 232, 242 184
+                       C 242 134, 204 96, 150 96 Z"
+                    fill="url(#bodyGrad)" stroke="#06190f" stroke-width="3"/>
+
+              <!-- belly -->
+              <ellipse cx="150" cy="206" rx="62" ry="46" fill="url(#bellyGrad)" opacity="0.9"/>
+
+              <!-- bioluminescent spots -->
+              <circle cx="104" cy="168" r="13" fill="url(#spotGlow)"/>
+              <circle cx="196" cy="168" r="13" fill="url(#spotGlow)"/>
+              <circle cx="150" cy="244" r="11" fill="url(#spotGlow)"/>
+              <circle cx="104" cy="168" r="5" fill="#3fe6c4" filter="url(#soft)"/>
+              <circle cx="196" cy="168" r="5" fill="#3fe6c4" filter="url(#soft)"/>
+
+              <!-- front legs/arms -->
+              <path d="M108 250 q-26 8 -40 -2 q14 14 40 8 Z" fill="#0e3526"/>
+              <path d="M192 250 q26 8 40 -2 q-14 14 -40 8 Z" fill="#0e3526"/>
+
+              <!-- eye bumps on top of head -->
+              <ellipse cx="108" cy="104" rx="40" ry="40" fill="url(#bodyGrad)" stroke="#06190f" stroke-width="3"/>
+              <ellipse cx="192" cy="104" rx="40" ry="40" fill="url(#bodyGrad)" stroke="#06190f" stroke-width="3"/>
+
+              <!-- LEFT eye -->
+              <g>
+                <circle cx="108" cy="96" r="27" fill="url(#eyeGrad)"/>
+                <circle cx="108" cy="96" r="27" fill="none" stroke="#0a3a0a" stroke-width="2.5"/>
+                <ellipse cx="108" cy="100" rx="11" ry="15" fill="#04140a"/>  <!-- pupil -->
+                <circle cx="101" cy="89" r="6" fill="#f4ffe0" opacity="0.95"/> <!-- highlight -->
+                <!-- eyelid -->
+                <rect class="eyelid" x="80" y="68" width="56" height="56" rx="27" fill="#15452f"/>
+              </g>
+              <!-- RIGHT eye -->
+              <g>
+                <circle cx="192" cy="96" r="27" fill="url(#eyeGrad)"/>
+                <circle cx="192" cy="96" r="27" fill="none" stroke="#0a3a0a" stroke-width="2.5"/>
+                <ellipse cx="192" cy="100" rx="11" ry="15" fill="#04140a"/>
+                <circle cx="185" cy="89" r="6" fill="#f4ffe0" opacity="0.95"/>
+                <rect class="eyelid" x="164" y="68" width="56" height="56" rx="27" fill="#15452f"/>
+              </g>
+
+              <!-- nostrils -->
+              <ellipse cx="142" cy="150" rx="2.6" ry="3.4" fill="#05160d"/>
+              <ellipse cx="158" cy="150" rx="2.6" ry="3.4" fill="#05160d"/>
+
+              <!-- mouth -->
+              <path d="M104 176 Q150 212 196 176" fill="none" stroke="#06190f" stroke-width="4.5" stroke-linecap="round"/>
+              <path d="M104 176 Q150 206 196 176" fill="none" stroke="rgba(170,255,0,0.18)" stroke-width="2" stroke-linecap="round"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div class="fps" style="margin-top:14px;">tap the frog to snatch flies from the dark</div>
+    </section>
+
+    <!-- RIGHT : PRODUCERS -->
+    <section class="panel" id="producerPanel">
+      <div class="panel-title">The Swamp</div>
+      <div class="panel-sub">Hunters working the night</div>
+      <div class="shop-list" id="producerList"></div>
+      <div class="totals">
+        <span class="lab">Total per second</span>
+        <span class="val" id="totalCps">0</span>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<footer class="bar">
+  <span class="status">last saved <b id="saveStatus">never</b></span>
+  <button class="btn" id="saveBtn">Save</button>
+  <button class="btn" id="exportBtn">Export</button>
+  <button class="btn" id="importBtn">Import</button>
+  <button class="btn danger" id="wipeBtn">Wipe Save</button>
+</footer>
+
+<!-- export / import save modal -->
+<div id="modal" class="modal-overlay" hidden>
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">Export Save</div>
+    <div class="modal-sub" id="modalSub"></div>
+    <textarea id="modalText" spellcheck="false" autocomplete="off"></textarea>
+    <div class="modal-actions">
+      <button class="btn" id="modalAction">Copy</button>
+      <button class="btn" id="modalClose">Close</button>
+    </div>
+    <div class="modal-msg" id="modalMsg"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   ICON LIBRARY (small inline SVGs for shop cards)
+   ============================================================ */
+const ICONS = {
+  tongue:  '<svg viewBox="0 0 24 24" fill="none" stroke="#AAFF00" stroke-width="1.7"><path d="M5 7c0-2 2-3 7-3s7 1 7 3v3c0 2-2 3-4 3"/><path d="M9 10c0 4 1 8-1 9" stroke="#3fe6c4"/></svg>',
+  rain:    '<svg viewBox="0 0 24 24" fill="none" stroke="#3fe6c4" stroke-width="1.7"><path d="M6 12a4 4 0 0 1 0-8 5 5 0 0 1 9 2 3.5 3.5 0 0 1 1 7"/><path d="M8 16l-1 3M12 16l-1 3M16 16l-1 3" stroke="#AAFF00"/></svg>',
+  moon:    '<svg viewBox="0 0 24 24" fill="none" stroke="#AAFF00" stroke-width="1.7"><path d="M20 13a7 7 0 1 1-8-9 6 6 0 0 0 8 9Z"/></svg>',
+  ancient: '<svg viewBox="0 0 24 24" fill="none" stroke="#3fe6c4" stroke-width="1.7"><path d="M4 20h16M6 20V9l6-4 6 4v11M10 20v-6h4v6"/></svg>',
+  mosquito:'<svg viewBox="0 0 24 24" fill="none" stroke="#AAFF00" stroke-width="1.6"><circle cx="12" cy="13" r="3"/><path d="M12 16v4M9 11 4 6M15 11l5-5M9 13H3M15 13h6"/></svg>',
+  lily:    '<svg viewBox="0 0 24 24" fill="none" stroke="#AAFF00" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M12 12 18 8"/></svg>',
+  tadpole: '<svg viewBox="0 0 24 24" fill="none" stroke="#3fe6c4" stroke-width="1.6"><circle cx="8" cy="10" r="4"/><path d="M11 12c4 1 7 4 9 8" /></svg>',
+  bog:     '<svg viewBox="0 0 24 24" fill="none" stroke="#AAFF00" stroke-width="1.6"><path d="M3 16c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 11c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg>',
+  heron:   '<svg viewBox="0 0 24 24" fill="none" stroke="#3fe6c4" stroke-width="1.6"><path d="M7 21V8M7 8l5-4 2 3M14 7l4 1M12 21h-3M12 21h3"/></svg>',
+  choir:   '<svg viewBox="0 0 24 24" fill="none" stroke="#AAFF00" stroke-width="1.6"><path d="M9 18V6l10-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>',
+  pond:    '<svg viewBox="0 0 24 24" fill="none" stroke="#3fe6c4" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18M3 12h18" stroke="#AAFF00"/></svg>'
+};
+
+/* ============================================================
+   GAME DEFINITIONS
+   ============================================================ */
+// Producers — buildings that auto-generate flies/sec.
+// cost scales by COST_GROWTH^(owned) like classic incremental games.
+const COST_GROWTH = 1.15;
+
+const PRODUCERS = [
+  { id:"mosquito", name:"Mosquito Trap",   icon:"mosquito", baseCost:15,     rate:0.1 },
+  { id:"lily",     name:"Lily Pad",        icon:"lily",     baseCost:100,    rate:0.5 },
+  { id:"tadpole",  name:"Tadpole School",  icon:"tadpole",  baseCost:500,    rate:2 },
+  { id:"bog",      name:"Swamp Bog",       icon:"bog",      baseCost:2000,   rate:10 },
+  { id:"heron",    name:"Heron Scarecrow", icon:"heron",    baseCost:10000,  rate:50 },
+  { id:"choir",    name:"Frog Choir",      icon:"choir",    baseCost:50000,  rate:200 },
+  { id:"pond",     name:"Enchanted Pond",  icon:"pond",     baseCost:200000, rate:1000 }
+];
+
+// Upgrades — one-time flat multipliers.
+// kind "click" multiplies click value; kind "prod" multiplies all production.
+const UPGRADES = [
+  { id:"tongue",  name:"Sticky Tongue",     icon:"tongue",  cost:100,    kind:"click", mult:2, desc:"2× per click" },
+  { id:"rain",    name:"Rain Season",       icon:"rain",    cost:500,    kind:"prod",  mult:2, desc:"2× all production" },
+  { id:"moon",    name:"Moonlight Hunting", icon:"moon",    cost:5000,   kind:"click", mult:3, desc:"3× per click" },
+  { id:"ancient", name:"Ancient Swamp",     icon:"ancient", cost:20000,  kind:"prod",  mult:2, desc:"2× all production" }
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  flies: 0,            // exact current currency
+  totalFlies: 0,       // lifetime earned
+  totalClicks: 0,
+  producers: {},       // id -> count
+  upgrades: {}         // id -> true (owned)
+};
+PRODUCERS.forEach(p => state.producers[p.id] = 0);
+UPGRADES.forEach(u => state.upgrades[u.id] = false);
+
+let displayFlies = 0;  // smoothed value shown in the counter (lerps toward state.flies)
+
+/* ============================================================
+   DERIVED VALUES
+   ============================================================ */
+function clickValue(){
+  let v = 1;
+  UPGRADES.forEach(u => { if(u.kind==="click" && state.upgrades[u.id]) v *= u.mult; });
+  return v;
+}
+function prodMultiplier(){
+  let m = 1;
+  UPGRADES.forEach(u => { if(u.kind==="prod" && state.upgrades[u.id]) m *= u.mult; });
+  return m;
+}
+function producerCost(p){
+  return Math.ceil(p.baseCost * Math.pow(COST_GROWTH, state.producers[p.id]));
+}
+function producerCps(p){
+  return p.rate * state.producers[p.id] * prodMultiplier();
+}
+function totalCps(){
+  return PRODUCERS.reduce((s,p)=> s + producerCps(p), 0);
+}
+
+/* ============================================================
+   NUMBER FORMATTING  (K / M / B / T)
+   ============================================================ */
+function fmt(n){
+  if(n < 1000) return Math.floor(n).toLocaleString("en-US");
+  const units = [[1e12,"T"],[1e9,"B"],[1e6,"M"],[1e3,"K"]];
+  for(const [v,s] of units){
+    if(n >= v){
+      const val = n / v;
+      let str = (val >= 100 ? val.toFixed(1) : val.toFixed(2));
+      str = str.replace(/\.?0+$/,"");        // trim trailing zeros: 2.00 -> 2
+      return str + s;
+    }
+  }
+}
+// rate formatter keeps small decimals readable (0.1 flies/sec etc.)
+function fmtRate(n){
+  if(n === 0) return "0";
+  if(n < 1000) return Number.isInteger(n) ? n.toString() : n.toFixed(1);
+  return fmt(n);
+}
+
+/* ============================================================
+   DOM REFS
+   ============================================================ */
+const el = {
+  flyCount:  document.getElementById("flyCount"),
+  fpsVal:    document.getElementById("fpsVal"),
+  totalCps:  document.getElementById("totalCps"),
+  upgradeList: document.getElementById("upgradeList"),
+  producerList: document.getElementById("producerList"),
+  frog:      document.getElementById("frog"),
+  stage:     document.getElementById("stage"),
+  saveStatus:document.getElementById("saveStatus"),
+};
+
+// keep references to card elements so we update text instead of rebuilding (no jank)
+const cardRefs = {}; // id -> { root, cost, badge, contrib, wasAffordable }
+
+/* ============================================================
+   BUILD SHOP (once)
+   ============================================================ */
+function buildShop(){
+  // upgrades
+  UPGRADES.forEach(u => {
+    const root = document.createElement("div");
+    root.className = "card";
+    root.innerHTML = `
+      <div class="ic">${ICONS[u.icon]}</div>
+      <div class="body">
+        <div class="name">${u.name}</div>
+        <div class="meta">${u.desc}</div>
+      </div>
+      <div class="right">
+        <div class="cost"></div>
+      </div>`;
+    root.addEventListener("click", () => buyUpgrade(u));
+    el.upgradeList.appendChild(root);
+    cardRefs[u.id] = { root, cost: root.querySelector(".cost"), wasAffordable:false };
+  });
+
+  // producers
+  PRODUCERS.forEach(p => {
+    const root = document.createElement("div");
+    root.className = "card";
+    root.innerHTML = `
+      <div class="ic">${ICONS[p.icon]}</div>
+      <div class="body">
+        <div class="name">${p.name}</div>
+        <div class="meta">${fmtRate(p.rate)} flies/sec each</div>
+        <div class="contrib"></div>
+      </div>
+      <div class="right">
+        <div class="cost"></div>
+        <span class="owned-badge">0</span>
+      </div>`;
+    root.addEventListener("click", () => buyProducer(p));
+    el.producerList.appendChild(root);
+    cardRefs[p.id] = {
+      root,
+      cost: root.querySelector(".cost"),
+      badge: root.querySelector(".owned-badge"),
+      contrib: root.querySelector(".contrib"),
+      wasAffordable:false
+    };
+  });
+}
+
+/* ============================================================
+   UPDATE SHOP (throttled ~10fps — cheap, no DOM rebuild)
+   ============================================================ */
+function updateShop(){
+  // upgrades
+  UPGRADES.forEach(u => {
+    const ref = cardRefs[u.id];
+    const owned = state.upgrades[u.id];
+    if(owned){
+      ref.root.className = "card bought";
+      ref.cost.textContent = "✦ Owned";
+      return;
+    }
+    const can = state.flies >= u.cost;
+    ref.cost.textContent = fmt(u.cost);
+    ref.cost.classList.toggle("cant", !can);
+    setCardState(ref, can);
+  });
+
+  // producers
+  PRODUCERS.forEach(p => {
+    const ref = cardRefs[p.id];
+    const cost = producerCost(p);
+    const count = state.producers[p.id];
+    const can = state.flies >= cost;
+    ref.cost.textContent = fmt(cost);
+    ref.cost.classList.toggle("cant", !can);
+    ref.badge.textContent = count;
+    ref.badge.style.visibility = count > 0 ? "visible" : "hidden";
+    const c = producerCps(p);
+    ref.contrib.textContent = count > 0 ? `▸ ${fmtRate(c)} flies/sec total` : "";
+    setCardState(ref, can, count);
+  });
+}
+
+// shared affordability / pulse / lock styling for a card
+function setCardState(ref, affordable, ownedCount){
+  ref.root.classList.remove("affordable","locked","pulse","bought");
+  if(affordable){
+    ref.root.classList.add("affordable");
+    // pulse gold when you can newly afford something you don't own yet
+    const neverOwned = ownedCount === undefined ? true : ownedCount === 0;
+    if(neverOwned) ref.root.classList.add("pulse");
+  } else {
+    ref.root.classList.add("locked");
+  }
+}
+
+/* ============================================================
+   PURCHASES
+   ============================================================ */
+function buyUpgrade(u){
+  if(state.upgrades[u.id] || state.flies < u.cost) return;
+  state.flies -= u.cost;
+  state.upgrades[u.id] = true;
+  flashCard(u.id);
+  updateShop();
+}
+function buyProducer(p){
+  const cost = producerCost(p);
+  if(state.flies < cost) return;
+  state.flies -= cost;
+  state.producers[p.id]++;
+  flashCard(p.id);
+  updateShop();
+}
+function flashCard(id){
+  const root = cardRefs[id].root;
+  root.classList.remove("flash");
+  void root.offsetWidth;       // restart animation
+  root.classList.add("flash");
+}
+
+/* ============================================================
+   THE FROG — click handling + effects
+   ============================================================ */
+function onFrogClick(clientX, clientY){
+  const gain = clickValue();
+  state.flies += gain;
+  state.totalFlies += gain;
+  state.totalClicks++;
+
+  // squash & stretch (restart so rapid clicks always animate)
+  el.frog.classList.remove("squish");
+  void el.frog.offsetWidth;
+  el.frog.classList.add("squish");
+
+  // figure out click point relative to the stage
+  const rect = el.stage.getBoundingClientRect();
+  const x = clientX - rect.left;
+  const y = clientY - rect.top;
+
+  spawnRipple(x, y);
+  spawnPlusOne(x, y, gain);
+  spawnFlies(x, y);
+}
+
+function spawnRipple(x, y){
+  const r = document.createElement("div");
+  r.className = "ripple";
+  r.style.left = x + "px";
+  r.style.top  = y + "px";
+  el.stage.appendChild(r);
+  r.addEventListener("animationend", () => r.remove());
+}
+
+function spawnPlusOne(x, y, gain){
+  const p = document.createElement("div");
+  p.className = "plusone";
+  p.textContent = "+" + fmt(gain);
+  p.style.left = x + "px";
+  p.style.top  = y + "px";
+  el.stage.appendChild(p);
+  p.addEventListener("animationend", () => p.remove());
+}
+
+// 3–5 fly particles that arc outward and fade
+function spawnFlies(x, y){
+  const n = 3 + Math.floor(Math.random() * 3);
+  for(let i = 0; i < n; i++){
+    const f = document.createElement("div");
+    f.className = "fly";
+    const angle = (-Math.PI/2) + (Math.random() - 0.5) * 2.0;  // mostly upward fan
+    const dist = 60 + Math.random() * 70;
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist - 20;   // bias up
+    f.style.left = x + "px";
+    f.style.top  = y + "px";
+    f.style.setProperty("--dx", dx.toFixed(1) + "px");
+    f.style.setProperty("--dy", dy.toFixed(1) + "px");
+    f.style.setProperty("--rot", (Math.random()*360|0) + "deg");
+    el.stage.appendChild(f);
+    f.addEventListener("animationend", () => f.remove());
+  }
+}
+
+// pointer (works for mouse + touch)
+el.frog.addEventListener("pointerdown", (e) => {
+  e.preventDefault();
+  onFrogClick(e.clientX, e.clientY);
+});
+
+/* ============================================================
+   IDLE BLINK — occasional, randomized
+   ============================================================ */
+function scheduleBlink(){
+  const delay = 2600 + Math.random() * 4200;
+  setTimeout(() => {
+    const svg = el.frog.querySelector("svg");
+    svg.classList.remove("frog-blink");
+    void svg.offsetWidth;
+    svg.classList.add("frog-blink");
+    // sometimes a quick double-blink
+    if(Math.random() < 0.25){
+      setTimeout(() => { svg.classList.remove("frog-blink"); void svg.offsetWidth; svg.classList.add("frog-blink"); }, 320);
+    }
+    scheduleBlink();
+  }, delay);
+}
+
+/* ============================================================
+   MAIN GAME LOOP — delta-time accrual + smooth counter
+   ============================================================ */
+let lastTime = performance.now();
+let shopAccumulator = 0;
+
+function loop(now){
+  const dt = Math.min((now - lastTime) / 1000, 0.25); // seconds, clamped
+  lastTime = now;
+
+  // accrue passive production
+  const cps = totalCps();
+  if(cps > 0){
+    const gain = cps * dt;
+    state.flies += gain;
+    state.totalFlies += gain;
+  }
+
+  // smooth (lerp) the displayed counter toward the true value — ticker feel
+  displayFlies += (state.flies - displayFlies) * Math.min(1, dt * 9);
+  if(Math.abs(state.flies - displayFlies) < 0.5) displayFlies = state.flies;
+
+  el.flyCount.textContent = fmt(displayFlies);
+  el.fpsVal.textContent   = fmtRate(cps);
+  el.totalCps.textContent = fmtRate(cps);
+
+  // refresh shop ~10×/sec (affordability, costs, badges) — keeps it cheap
+  shopAccumulator += dt;
+  if(shopAccumulator >= 0.1){
+    shopAccumulator = 0;
+    updateShop();
+  }
+
+  requestAnimationFrame(loop);
+}
+
+/* ============================================================
+   SAVE / LOAD  (cookies + base64 export/import, Cookie Clicker style)
+   ============================================================ */
+const SAVE_KEY = "midnight_bayou_save_v1";
+const COOKIE_DAYS = 365;
+
+/* ---- cookie helpers ---- */
+function writeCookie(name, value, days){
+  let expires = "";
+  if(days){
+    const d = new Date();
+    d.setTime(d.getTime() + days * 86400000);
+    expires = "; expires=" + d.toUTCString();
+  }
+  document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/; SameSite=Lax";
+}
+function readCookie(name){
+  const key = name + "=";
+  for(const part of document.cookie.split("; ")){
+    if(part.indexOf(key) === 0) return decodeURIComponent(part.substring(key.length));
+  }
+  return null;
+}
+function eraseCookie(name){
+  document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+}
+
+/* ---- serialization shared by cookie + export ---- */
+function serialize(){
+  return {
+    flies: state.flies,
+    totalFlies: state.totalFlies,
+    totalClicks: state.totalClicks,
+    producers: state.producers,
+    upgrades: state.upgrades,
+    t: Date.now()
+  };
+}
+function applyData(data){
+  state.flies      = data.flies || 0;
+  state.totalFlies = data.totalFlies || 0;
+  state.totalClicks= data.totalClicks || 0;
+  PRODUCERS.forEach(p => { state.producers[p.id] = (data.producers && data.producers[p.id]) || 0; });
+  UPGRADES.forEach(u => { state.upgrades[u.id] = !!(data.upgrades && data.upgrades[u.id]); });
+  displayFlies = state.flies;
+}
+// JSON -> base64 (unicode-safe). This IS the export string.
+function encodeSave(data){
+  return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+}
+function decodeSave(str){
+  let s = (str || "").trim();
+  if(!s) throw new Error("empty");
+  // Accept a raw JSON save pasted directly (e.g. from a base64 decode tool)
+  if(s.charAt(0) === "{") return JSON.parse(s);
+  // Otherwise treat as base64: drop anything outside the base64 alphabet
+  // (stray spaces, newlines, quotes from copy/paste) before decoding.
+  s = s.replace(/[^A-Za-z0-9+/=]/g, "");
+  return JSON.parse(decodeURIComponent(escape(atob(s))));
+}
+
+function stamp(t){
+  el.saveStatus.textContent = new Date(t).toLocaleTimeString("en-US", {hour:"2-digit", minute:"2-digit"});
+}
+
+/* ---- storage layer ----
+   localStorage is the primary store because it works when the file is opened
+   directly from disk (file:// protocol). Cookies do NOT persist on file:// in
+   Chrome, so a cookie is only used as a fallback when localStorage is blocked
+   (e.g. a sandboxed iframe preview). Whichever sticks, wins. */
+const Store = {
+  set(key, val){
+    try{
+      localStorage.setItem(key, val);
+      if(localStorage.getItem(key) === val) return "local";
+    }catch(e){ /* blocked — try cookie */ }
+    try{
+      writeCookie(key, val, COOKIE_DAYS);
+      if(readCookie(key) !== null) return "cookie";
+    }catch(e){ /* blocked too */ }
+    return null;
+  },
+  get(key){
+    try{ const v = localStorage.getItem(key); if(v !== null) return v; }catch(e){}
+    try{ const v = readCookie(key); if(v !== null) return v; }catch(e){}
+    return null;
+  },
+  remove(key){
+    try{ localStorage.removeItem(key); }catch(e){}
+    try{ eraseCookie(key); }catch(e){}
+  }
+};
+
+function saveGame(){
+  const ok = Store.set(SAVE_KEY, encodeSave(serialize()));
+  if(ok) stamp(Date.now());
+  else el.saveStatus.textContent = "unavailable here";
+}
+
+function loadGame(){
+  try{
+    const raw = Store.get(SAVE_KEY);
+    if(!raw) return;
+    const data = decodeSave(raw);
+    applyData(data);
+    if(data.t) stamp(data.t);
+  }catch(err){ /* corrupt or blocked — start fresh */ }
+}
+
+function wipeSave(){
+  Store.remove(SAVE_KEY);
+  state.flies = 0; state.totalFlies = 0; state.totalClicks = 0;
+  PRODUCERS.forEach(p => state.producers[p.id] = 0);
+  UPGRADES.forEach(u => state.upgrades[u.id] = false);
+  displayFlies = 0;
+  el.saveStatus.textContent = "wiped";
+  updateShop();
+}
+
+/* ---- base64 export / import (works even when cookies are blocked) ---- */
+function exportSave(){ openModal("export", encodeSave(serialize())); }
+function importSave(code){
+  try{
+    const data = decodeSave(code);
+    if(typeof data !== "object" || data === null || Array.isArray(data))
+      throw new Error("not a save object");
+    // sanity check: a real save has at least flies or producers
+    if(data.flies === undefined && data.totalFlies === undefined && !data.producers)
+      throw new Error("missing save fields");
+    applyData(data);
+    saveGame();
+    updateShop();
+    return { ok:true };
+  }catch(err){
+    return { ok:false, error: (err && err.message) ? err.message : String(err) };
+  }
+}
+
+/* ---- modal ---- */
+const modal = {
+  overlay: document.getElementById("modal"),
+  title:   document.getElementById("modalTitle"),
+  sub:     document.getElementById("modalSub"),
+  text:    document.getElementById("modalText"),
+  action:  document.getElementById("modalAction"),
+  close:   document.getElementById("modalClose"),
+  msg:     document.getElementById("modalMsg"),
+  mode: null
+};
+
+function openModal(mode, code){
+  modal.mode = mode;
+  modal.msg.textContent = "";
+  if(mode === "export"){
+    modal.title.textContent = "Export Save";
+    modal.sub.textContent = "Copy this code and keep it safe. Paste it into Import — on any device — to restore your swamp.";
+    modal.text.value = code;
+    modal.text.readOnly = true;
+    modal.action.textContent = "Copy to Clipboard";
+  } else {
+    modal.title.textContent = "Import Save";
+    modal.sub.textContent = "Paste a save code below, then load it. This overwrites your current progress.";
+    modal.text.value = "";
+    modal.text.readOnly = false;
+    modal.text.placeholder = "Paste your save code here…";
+    modal.action.textContent = "Load Save";
+  }
+  modal.overlay.hidden = false;
+  requestAnimationFrame(() => { modal.text.focus(); if(mode === "export") modal.text.select(); });
+}
+function closeModal(){ modal.overlay.hidden = true; }
+
+modal.action.addEventListener("click", () => {
+  if(modal.mode === "export"){
+    modal.text.select();
+    let legacy = false;
+    try{ legacy = document.execCommand("copy"); }catch(e){}
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(modal.text.value)
+        .then(() => modal.msg.textContent = "Copied to clipboard.")
+        .catch(() => modal.msg.textContent = legacy ? "Copied." : "Select all and press Ctrl/Cmd+C.");
+    } else {
+      modal.msg.textContent = legacy ? "Copied." : "Select all and press Ctrl/Cmd+C.";
+    }
+  } else {
+    const code = modal.text.value.trim();
+    if(!code){ modal.msg.textContent = "Paste a code first."; return; }
+    const res = importSave(code);
+    if(res.ok){ modal.msg.textContent = "Save loaded!"; setTimeout(closeModal, 700); }
+    else modal.msg.textContent = "Couldn't read that code — " + res.error;
+  }
+});
+modal.close.addEventListener("click", closeModal);
+modal.overlay.addEventListener("click", (e) => { if(e.target === modal.overlay) closeModal(); });
+document.addEventListener("keydown", (e) => { if(e.key === "Escape" && !modal.overlay.hidden) closeModal(); });
+
+/* ---- button wiring ---- */
+document.getElementById("saveBtn").addEventListener("click", saveGame);
+document.getElementById("exportBtn").addEventListener("click", exportSave);
+document.getElementById("importBtn").addEventListener("click", () => openModal("import"));
+document.getElementById("wipeBtn").addEventListener("click", () => {
+  if(confirm("Drain the bayou? This erases your progress permanently.")) wipeSave();
+});
+// autosave every 30s + on tab close
+setInterval(saveGame, 30000);
+window.addEventListener("beforeunload", saveGame);
+
+/* ============================================================
+   ATMOSPHERE — generate lily pads + fireflies
+   ============================================================ */
+function buildAtmosphere(){
+  const atmos = document.getElementById("atmos");
+
+  // drifting lily pads
+  const padCount = 7;
+  for(let i = 0; i < padCount; i++){
+    const pad = document.createElement("div");
+    pad.className = "pad" + (Math.random() < 0.5 ? " lit" : "");
+    const size = 90 + Math.random() * 230;
+    pad.style.width = size + "px";
+    pad.style.height = size + "px";
+    pad.style.left = (Math.random() * 100) + "vw";
+    pad.style.top  = (Math.random() * 100) + "vh";
+    pad.style.setProperty("--dx", (Math.random()*60 - 30).toFixed(0) + "px");
+    pad.style.setProperty("--dy", (Math.random()*50 - 25).toFixed(0) + "px");
+    pad.style.setProperty("--notch", (Math.random()*360|0) + "deg");
+    pad.style.animationDuration = (22 + Math.random()*28) + "s";
+    pad.style.animationDelay = (-Math.random()*20) + "s";
+    atmos.appendChild(pad);
+  }
+
+  // blinking fireflies
+  const flyCount = 16;
+  for(let i = 0; i < flyCount; i++){
+    const ff = document.createElement("div");
+    ff.className = "firefly";
+    ff.style.left = (Math.random() * 100) + "vw";
+    ff.style.top  = (Math.random() * 100) + "vh";
+    ff.style.animationDuration = (3 + Math.random()*5) + "s";
+    ff.style.animationDelay = (-Math.random()*8) + "s";
+    if(Math.random() < 0.4){ ff.style.background = "var(--teal)"; ff.style.boxShadow = "0 0 8px 2px rgba(63,230,196,0.8)"; }
+    atmos.appendChild(ff);
+  }
+}
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+buildAtmosphere();
+buildShop();
+loadGame();
+updateShop();
+scheduleBlink();
+requestAnimationFrame((t) => { lastTime = t; loop(t); });
+</script>
+</body>
+</html>
