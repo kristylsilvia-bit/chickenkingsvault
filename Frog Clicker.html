@@ -572,7 +572,9 @@ footer.bar .status b{ color:var(--teal); }
   grid-template-columns: minmax(220px,var(--col-w)) minmax(300px,1fr) minmax(220px,var(--col-w)); }
 .panel{ display:flex; flex-direction:column; max-height:var(--panel-h); padding:var(--s4); }
 .panel > .shop-list{ flex:1 1 auto; min-height:0; overflow-y:auto; gap:var(--s3); padding-right:var(--s1); }
-.center{ max-height:var(--panel-h); overflow-y:auto; overflow-x:hidden; }
+/* center stays unclipped so frog click FX (ripples/flies/+N) never get cut;
+   equal column height is handled by the grid's align-items:stretch */
+.center{ overflow:visible; }
 .stage{ width:min(360px,100%); height:auto; aspect-ratio:7/8; margin-top:var(--s4); }
 .card{ padding:var(--s3); gap:var(--s3); }
 .totals{ flex:0 0 auto; }
