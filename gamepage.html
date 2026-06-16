@@ -909,6 +909,9 @@
             }
         }
 
+        var urlQuery = urlParams.get('q');
+        if (urlQuery) { input.value = urlQuery; }
+
         function normalize(s) { return s.trim().toLowerCase(); }
 
         function applyAll() {
