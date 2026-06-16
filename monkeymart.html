@@ -94,7 +94,6 @@
             referrerpolicy="no-referrer"
             loading="eager"></iframe>
     </div>
-<<<<<<< HEAD
 
     <script>
         const fsBtn = document.getElementById('fsBtn');
@@ -157,68 +156,4 @@
     </script>
 </body>
 
-=======
-
-    <script>
-        const fsBtn = document.getElementById('fsBtn');
-        const wrapper = document.getElementById('frameWrapper');
-        const iframe = document.getElementById('gameFrame');
-        const homeBtn = document.getElementById('homeBtn');
-
-        function isFullscreen() {
-            return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-        }
-
-        function requestFull(element) {
-            if (element.requestFullscreen) return element.requestFullscreen();
-            if (element.webkitRequestFullscreen) return element.webkitRequestFullscreen();
-            if (element.mozRequestFullScreen) return element.mozRequestFullScreen();
-            if (element.msRequestFullscreen) return element.msRequestFullscreen();
-        }
-
-        function exitFull() {
-            if (document.exitFullscreen) return document.exitFullscreen();
-            if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
-            if (document.mozCancelFullScreen) return document.mozCancelFullScreen();
-            if (document.msExitFullscreen) return document.msExitFullscreen();
-        }
-
-        fsBtn.addEventListener('click', async () => {
-            try {
-                if (!isFullscreen()) {
-                    // Many browsers don't allow making a cross-origin iframe the fullscreen root,
-                    // so request fullscreen on the wrapper element instead.
-                    await requestFull(wrapper);
-                    fsBtn.textContent = 'Exit fullscreen';
-                } else {
-                    await exitFull();
-                    fsBtn.textContent = 'Enter fullscreen';
-                }
-            } catch (e) {
-                console.error('Fullscreen request failed', e);
-            }
-        });
-
-        // Home button navigates to index.html
-        homeBtn.addEventListener('click', () => {
-            window.location.href = 'index.html';
-        });
-
-        // Update button text if user exits fullscreen via ESC or browser UI
-        document.addEventListener('fullscreenchange', () => {
-            fsBtn.textContent = isFullscreen() ? 'Exit fullscreen' : 'Enter fullscreen';
-        });
-        document.addEventListener('webkitfullscreenchange', () => {
-            fsBtn.textContent = isFullscreen() ? 'Exit fullscreen' : 'Enter fullscreen';
-        });
-        document.addEventListener('mozfullscreenchange', () => {
-            fsBtn.textContent = isFullscreen() ? 'Exit fullscreen' : 'Enter fullscreen';
-        });
-        document.addEventListener('MSFullscreenChange', () => {
-            fsBtn.textContent = isFullscreen() ? 'Exit fullscreen' : 'Enter fullscreen';
-        });
-    </script>
-</body>
-
->>>>>>> 4fd17980669247abd517e3fe4f59e499cfa12486
 </html>

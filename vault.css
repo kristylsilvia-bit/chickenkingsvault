@@ -1,17 +1,17 @@
-/* ============================================================================
+/* ----------------------------------------------------------------------------
    CHICKEN KING'S VAULT — DESIGN SYSTEM  (vault.css)
    One obsessive designer. Arcade-meets-luxury. Deep-space neon.
    Every animated property is transform/opacity only (GPU). All motion is
    wrapped for prefers-reduced-motion. Shared by index.html + gamepage.html.
-   ========================================================================== */
+   -------------------------------------------------------------------------- */
 
 /* ---- Animatable custom props (for conic spin / glow sweeps) -------------- */
 @property --spin   { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
 @property --sheen  { syntax: '<percentage>'; inherits: false; initial-value: -120%; }
 
-/* ============================================================================
+/* ----------------------------------------------------------------------------
    1. TOKENS
-   ========================================================================== */
+   -------------------------------------------------------------------------- */
 :root {
   /* Brand */
   --bg:      #05050a;
@@ -67,9 +67,9 @@
   --maxw: 1240px;
 }
 
-/* ============================================================================
+/* ----------------------------------------------------------------------------
    2. RESET + BASE
-   ========================================================================== */
+   -------------------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
@@ -124,9 +124,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   outline: 2px solid var(--blue); outline-offset: 3px; border-radius: var(--r1);
 }
 
-/* ============================================================================
+/* ----------------------------------------------------------------------------
    3. TYPE
-   ========================================================================== */
+   -------------------------------------------------------------------------- */
 .display {
   font-family: 'Bebas Neue', 'Inter', sans-serif;
   font-weight: 400; letter-spacing: 0.01em; line-height: 0.9;
@@ -141,9 +141,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
 }
 
-/* ============================================================================
+/* ----------------------------------------------------------------------------
    4. CUSTOM CURSOR  (fine-pointer only; reverts on reduced-motion)
-   ========================================================================== */
+   -------------------------------------------------------------------------- */
 .cursor-dot, .cursor-ring { display: none; }
 @media (hover: hover) and (pointer: fine) {
   body.has-cursor { cursor: none; }
@@ -164,9 +164,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   }
 }
 
-/* ============================================================================
+/* ----------------------------------------------------------------------------
    5. LOADER
-   ========================================================================== */
+   -------------------------------------------------------------------------- */
 .loader {
   position: fixed; inset: 0; z-index: 100000; display: grid; place-items: center;
   background: radial-gradient(60% 60% at 50% 42%, var(--bg-2), var(--bg));
@@ -181,9 +181,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .loader-fill { height: 100%; width: 0%; border-radius: var(--rf); background: var(--grad-brand); box-shadow: var(--glow-pink); transition: width 140ms linear; }
 .loader-pct { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.2em; color: var(--text-dim); }
 
-/* ============================================================================
+/* ----------------------------------------------------------------------------
    6. NAVBAR (glassmorphism, sticky)
-   ========================================================================== */
+   -------------------------------------------------------------------------- */
 .nav {
   position: sticky; top: 0; z-index: 9000; width: 100%;
   height: var(--nav-h); display: flex; align-items: center;
@@ -257,9 +257,9 @@ body.menu-open .mobile-menu { opacity: 1; visibility: visible; transform: transl
   .nav-burger { display: block; }
 }
 
-/* ============================================================================
+/* ----------------------------------------------------------------------------
    7. BUTTONS
-   ========================================================================== */
+   -------------------------------------------------------------------------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   text-decoration: none; cursor: pointer; border: none; user-select: none;
@@ -281,9 +281,9 @@ body.menu-open .mobile-menu { opacity: 1; visibility: visible; transform: transl
 }
 .btn:hover::before { --sheen: 120%; }
 
-/* ============================================================================
+/* ----------------------------------------------------------------------------
    8. SECTION SCAFFOLD + SCROLL REVEAL
-   ========================================================================== */
+   -------------------------------------------------------------------------- */
 .section { position: relative; z-index: 1; width: 100%; max-width: var(--maxw); margin: 0 auto; padding: var(--s9) clamp(16px, 4vw, 40px); }
 .section-head { margin-bottom: var(--s6); }
 .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 6vw, 4rem); letter-spacing: 0.02em; line-height: 0.92; }
@@ -293,9 +293,9 @@ body.menu-open .mobile-menu { opacity: 1; visibility: visible; transform: transl
 .reveal.d1 { transition-delay: 80ms; } .reveal.d2 { transition-delay: 160ms; }
 .reveal.d3 { transition-delay: 240ms; } .reveal.d4 { transition-delay: 320ms; }
 
-/* ============================================================================
+/* ----------------------------------------------------------------------------
    9. GAME CARD  (shared: index highlights + gamepage .game-link)
-   ========================================================================== */
+   -------------------------------------------------------------------------- */
 .game-link {
   display: flex; flex-direction: column; gap: 10px; text-decoration: none; color: var(--text);
   border-radius: var(--r2); padding: 10px; background: var(--surface);
@@ -351,9 +351,9 @@ body.menu-open .mobile-menu { opacity: 1; visibility: visible; transform: transl
 body.rainbow .game-link img { animation: hue 4s linear infinite; }
 @keyframes hue { to { filter: hue-rotate(360deg); } }
 
-/* ============================================================================
+/* ----------------------------------------------------------------------------
    10. MARQUEE
-   ========================================================================== */
+   -------------------------------------------------------------------------- */
 .marquee { position: relative; width: 100%; overflow: hidden; padding: var(--s3) 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface); }
 .marquee + .marquee { border-top: none; }
 .marquee-track { display: inline-flex; gap: var(--s4); white-space: nowrap; will-change: transform; animation: marq 38s linear infinite; }
@@ -365,9 +365,9 @@ body.rainbow .game-link img { animation: hue 4s linear infinite; }
 .marquee.rev .marquee-item { color: var(--text-faint); }
 .marquee.rev .marquee-item::after { color: var(--blue); }
 
-/* ============================================================================
+/* ----------------------------------------------------------------------------
    11. FOOTER
-   ========================================================================== */
+   -------------------------------------------------------------------------- */
 .footer { position: relative; z-index: 1; border-top: 1px solid var(--border); margin-top: var(--s8); background: linear-gradient(180deg, transparent, rgba(155,93,229,0.06)); }
 .footer-inner { max-width: var(--maxw); margin: 0 auto; padding: var(--s8) clamp(16px,4vw,40px) var(--s6); display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: var(--s7); }
 .footer-brand { display: flex; flex-direction: column; gap: var(--s3); }
@@ -382,9 +382,9 @@ body.rainbow .game-link img { animation: hue 4s linear infinite; }
 .footer-bar strong { color: var(--text-muted); }
 @media (max-width: 760px) { .footer-inner { grid-template-columns: 1fr 1fr; } .footer-brand { grid-column: 1 / -1; } }
 
-/* ============================================================================
+/* ----------------------------------------------------------------------------
    12. TOAST SYSTEM  (every easter egg funnels here)
-   ========================================================================== */
+   -------------------------------------------------------------------------- */
 .toast-wrap { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 99998; display: flex; flex-direction: column; gap: 10px; align-items: center; pointer-events: none; width: max-content; max-width: 92vw; }
 .toast {
   pointer-events: auto; display: flex; align-items: center; gap: 12px;
@@ -419,9 +419,9 @@ body.rainbow .game-link img { animation: hue 4s linear infinite; }
 .idle-bubble .speech { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: var(--r3); padding: 10px 16px; font-weight: 700; font-size: 0.9rem; box-shadow: var(--shadow-2); }
 .idle-bubble .crown { font-size: 2.4rem; will-change: transform; animation: crownPulse 1.4s var(--ease) infinite; }
 
-/* ============================================================================
+/* ----------------------------------------------------------------------------
    13. REDUCED MOTION — clean, calm, fully usable
-   ========================================================================== */
+   -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
   html { scroll-behavior: auto; }
