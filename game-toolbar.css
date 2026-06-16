@@ -1,19 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@600;700;800&display=swap');
 
 :root {
-    --red:    #ff6b6b;
-    --blue:   #6bb5ff;
-    --bg:     #0d0d11;
-    --surface: rgba(255,255,255,0.05);
-    --border:  rgba(255,255,255,0.09);
+    --color-bg: #0a0a0f;
+    --color-surface: #111118;
+    --color-gold: #FFD700;
+    --color-pink: #FF2D78;
+    --color-blue: #00D4FF;
+    --gradient-primary: linear-gradient(135deg, #FF2D78, #00D4FF);
+    --gradient-text: linear-gradient(90deg, #FFD700, #FF2D78, #00D4FF);
+    --border-glass: 1px solid rgba(255, 255, 255, 0.1);
+    --radius-pill: 999px;
     --toolbar-h: 54px;
 }
 
 html, body {
     height: 100%;
     margin: 0;
-    font-family: 'Nunito', system-ui, sans-serif;
-    background: var(--bg);
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--color-bg);
     overflow: hidden;
 }
 
@@ -24,29 +28,33 @@ html, body {
     gap: 10px;
     padding: 0 14px;
     height: var(--toolbar-h);
-    background: rgba(13, 13, 17, 0.97);
-    border-bottom: 1px solid var(--border);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     position: relative;
     z-index: 10;
     flex-shrink: 0;
 }
 
-/* Subtle animated gradient line at very top */
+/* Animated gradient line at very top */
 .toolbar::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 2px;
-    background: linear-gradient(90deg, var(--red), var(--blue), var(--red));
+    background: linear-gradient(90deg, var(--color-gold), var(--color-pink), var(--color-blue), var(--color-gold));
     background-size: 200% 100%;
-    animation: shimmer 4s linear infinite;
+    animation: shimmer 5s linear infinite;
 }
 
 @keyframes shimmer {
     0%   { background-position: 0% 0%; }
     100% { background-position: 200% 0%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toolbar::before { animation: none; }
 }
 
 /* Vault back-link */
@@ -55,36 +63,37 @@ html, body {
     align-items: center;
     gap: 6px;
     text-decoration: none;
-    font-family: 'Bangers', cursive;
+    font-family: 'Bebas Neue', sans-serif;
     font-size: 1.25rem;
-    letter-spacing: 1px;
+    letter-spacing: 0.06em;
     color: #fff;
     white-space: nowrap;
-    padding: 5px 13px;
-    border-radius: 30px;
-    background: linear-gradient(135deg, rgba(255,107,107,0.12), rgba(107,181,255,0.12));
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    padding: 5px 14px;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.05);
+    border: var(--border-glass);
+    transition: background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
     flex-shrink: 0;
 }
 
 .vault-logo:hover {
-    background: linear-gradient(135deg, rgba(255,107,107,0.28), rgba(107,181,255,0.28));
-    border-color: rgba(107,181,255,0.45);
+    background: var(--gradient-primary);
+    border-color: transparent;
     transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(255, 45, 120, 0.35);
 }
 
 /* Divider */
 .toolbar-sep {
     width: 1px;
     height: 20px;
-    background: var(--border);
+    background: rgba(255, 255, 255, 0.12);
     flex-shrink: 0;
 }
 
 /* Game name */
 .game-name {
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 800;
     font-size: 0.95rem;
     color: rgba(255, 255, 255, 0.85);
@@ -104,25 +113,26 @@ html, body {
     display: flex;
     align-items: center;
     gap: 6px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: rgba(255, 255, 255, 0.75);
-    font-family: 'Nunito', sans-serif;
+    background: rgba(255, 255, 255, 0.05);
+    border: var(--border-glass);
+    color: rgba(255, 255, 255, 0.78);
+    font-family: 'Inter', sans-serif;
     font-weight: 700;
     font-size: 0.82rem;
-    padding: 6px 15px;
-    border-radius: 30px;
+    padding: 7px 16px;
+    border-radius: var(--radius-pill);
     cursor: pointer;
-    transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+    transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
     white-space: nowrap;
     flex-shrink: 0;
 }
 
 .fs-btn:hover {
-    background: linear-gradient(135deg, rgba(255,107,107,0.18), rgba(107,181,255,0.18));
-    border-color: rgba(107,181,255,0.45);
+    background: var(--gradient-primary);
+    border-color: transparent;
     color: #fff;
     transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(255, 45, 120, 0.3);
 }
 
 .fs-btn:active {
