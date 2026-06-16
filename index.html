@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
+    <title>🐔 Chicken King's Vault — 726 Free Games, Zero Downloads</title>
+    <meta name="description" content="Chicken King's Vault — 726 free browser games. No downloads, no sign-ups, just vibes. Last day of school edition.">
+    <meta name="theme-color" content="#05050a">
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <!-- Fonts: Bebas Neue (display) + Inter (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Design system -->
+    <link rel="stylesheet" href="vault.css">
+
+    <!-- Loader must vanish even if JS never runs -->
+    <noscript><style>.loader{display:none!important}</style></noscript>
+
+    <!-- Ads + analytics (preserved) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4947572462455913" crossorigin="anonymous"></script>
+    <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+    <script defer src="/_vercel/insights/script.js"></script>
+
+    <style>
+        /* ===== HERO ===== */
+        .hero { position: relative; z-index: 1; max-width: var(--maxw); margin: 0 auto;
+            padding: clamp(40px, 7vw, 88px) clamp(16px, 4vw, 40px) clamp(32px, 5vw, 64px);
+            display: grid; grid-template-columns: 1.08fr 0.92fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
+        .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 7px 16px; border-radius: var(--rf);
+            background: var(--surface-2); border: 1px solid var(--border-2); font-size: 0.74rem; font-weight: 800;
+            letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); margin-bottom: var(--s5); }
+        .hero-eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: var(--glow-green); }
+        .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.6rem, 11vw, 8rem); line-height: 0.85;
+            letter-spacing: 0.01em; margin-bottom: var(--s4); }
+        .hero h1 .line { display: block; }
+        .hero h1 .vault { background: linear-gradient(120deg, var(--pink), var(--gold) 40%, var(--blue) 75%, var(--purple));
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-sub { color: var(--text-muted); font-size: clamp(1rem, 1.5vw, 1.18rem); max-width: 44ch; margin-bottom: var(--s6); }
+        .hero-sub b { color: var(--text); font-weight: 700; }
+
+        .stat-row { display: flex; gap: clamp(16px, 3vw, 36px); margin-bottom: var(--s6); flex-wrap: wrap; }
+        .stat { display: flex; flex-direction: column; }
+        .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1;
+            background: var(--grad-cool); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat:nth-child(2) .stat-num { background: var(--grad-hot); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat:nth-child(3) .stat-num { background: linear-gradient(135deg, var(--green), var(--blue)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-label { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim); margin-top: 4px; }
+        .hero-cta { display: flex; gap: var(--s3); flex-wrap: wrap; }
+
+        /* Featured floating card */
+        .hero-card { position: relative; z-index: 1; will-change: transform; animation: float 6s var(--ease) infinite alternate; }
+        @keyframes float { from { transform: translateY(-10px); } to { transform: translateY(10px); } }
+        .hero-card-inner { display: block; position: relative; border-radius: var(--r4); overflow: hidden;
+            border: 1px solid var(--border-2); box-shadow: var(--shadow-3), 0 0 60px rgba(255,45,120,0.18);
+            transform-style: preserve-3d; transition: transform var(--d2) var(--ease); text-decoration: none; aspect-ratio: 4/3; background: var(--bg-3); }
+        .hero-card-inner img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .hero-card-shine { position: absolute; inset: 0; background: linear-gradient(130deg, rgba(255,255,255,0.22), transparent 42%); pointer-events: none; mix-blend-mode: overlay; }
+        .hero-card-meta { position: absolute; left: 0; right: 0; bottom: 0; padding: var(--s6) var(--s5) var(--s5);
+            background: linear-gradient(180deg, transparent, rgba(3,3,8,0.92)); display: flex; flex-direction: column; gap: 4px; }
+        .hero-card-tag { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+        .hero-card-name { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.03em; color: #fff; line-height: 1; }
+        .hero-card-badge { position: absolute; top: 16px; right: 16px; padding: 6px 14px; border-radius: var(--rf);
+            background: var(--grad-brand); font-size: 0.7rem; font-weight: 900; letter-spacing: 0.12em; box-shadow: var(--glow-pink); z-index: 2; }
+
+        @media (max-width: 860px) {
+            .hero { grid-template-columns: 1fr; text-align: center; padding-top: clamp(28px,8vw,56px); }
+            .hero-sub, .stat-row, .hero-cta { margin-left: auto; margin-right: auto; justify-content: center; }
+            .hero-sub { max-width: none; }
+            .hero-card { max-width: 440px; margin: 0 auto; order: -1; }
+            .hero-eyebrow { margin-left: auto; margin-right: auto; }
+        }
+
+        /* ===== HIGHLIGHTS (asymmetric) ===== */
+        .highlights-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--s5); }
+        .hl-feature { position: relative; }
+        .hl-2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s5); }
+        .hl-card { position: relative; display: block; border-radius: var(--r3); overflow: hidden; text-decoration: none;
+            border: 1px solid var(--border); background: var(--bg-3); aspect-ratio: 1; isolation: isolate;
+            transition: transform var(--d2) var(--ease), box-shadow var(--d2) var(--ease); will-change: transform; }
+        .hl-feature .hl-card { aspect-ratio: auto; height: 100%; min-height: 340px; }
+        .hl-card img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--d3) var(--ease); }
+        .hl-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-2), 0 0 34px rgba(0,212,255,0.2); }
+        .hl-card:hover img { transform: scale(1.07); }
+        .hl-card::before { content: ''; position: absolute; inset: -1px; border-radius: inherit; z-index: 1; padding: 1.5px; opacity: 0;
+            background: conic-gradient(from var(--spin), var(--pink), var(--blue), var(--green), var(--gold), var(--pink));
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: opacity var(--d2) var(--ease); }
+        .hl-card:hover::before { opacity: 1; animation: spin 3.2s linear infinite; }
+        .hl-overlay { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; justify-content: flex-end;
+            padding: var(--s5); background: linear-gradient(180deg, transparent 45%, rgba(3,3,8,0.9)); }
+        .hl-genre { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); margin-bottom: 4px; }
+        .hl-name { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.03em; color: #fff; line-height: 0.95; }
+        .hl-feature .hl-name { font-size: clamp(2rem, 4vw, 3rem); }
+        .hl-2x2 .hl-name { font-size: 1.35rem; }
+        @media (max-width: 760px) { .highlights-grid { grid-template-columns: 1fr; } .hl-feature .hl-card { min-height: 260px; } }
+
+        /* ===== GENRES ===== */
+        .genre-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s4); }
+        .genre-card { position: relative; display: flex; flex-direction: column; gap: var(--s2); padding: var(--s5) var(--s4);
+            border-radius: var(--r3); text-decoration: none; background: var(--surface); border: 1px solid var(--border); overflow: hidden;
+            transition: transform var(--d2) var(--ease), border-color var(--d2) var(--ease), background var(--d2) var(--ease); will-change: transform; }
+        .genre-card::after { content: ''; position: absolute; inset: 0; opacity: 0; pointer-events: none;
+            background: radial-gradient(120% 80% at 0% 0%, var(--accent), transparent 60%); transition: opacity var(--d2) var(--ease); }
+        .genre-card:hover { transform: translateY(-6px); border-color: var(--accent); background: var(--surface-2); }
+        .genre-card:hover::after { opacity: 0.16; }
+        .genre-emoji { font-size: 2rem; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)); transition: transform var(--d2) var(--ease-snap); position: relative; z-index: 1; }
+        .genre-card:hover .genre-emoji { transform: scale(1.18) rotate(-6deg); }
+        .genre-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.04em; color: var(--text); position: relative; z-index: 1; }
+        .genre-count { font-size: 0.78rem; font-weight: 700; color: var(--text-dim); position: relative; z-index: 1; }
+        .genre-count b { color: var(--accent); }
+        .genre-all { margin-top: var(--s5); }
+        .genre-all-card { position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--s4);
+            padding: clamp(24px,4vw,40px); border-radius: var(--r4); text-decoration: none; overflow: hidden;
+            background: linear-gradient(120deg, rgba(255,45,120,0.14), rgba(0,212,255,0.12), rgba(155,93,229,0.14));
+            border: 1px solid var(--border-2); transition: transform var(--d2) var(--ease), box-shadow var(--d2) var(--ease); flex-wrap: wrap; }
+        .genre-all-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-2), 0 0 50px rgba(255,45,120,0.2); }
+        .genre-all-left { display: flex; flex-direction: column; gap: 4px; }
+        .genre-all-k { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 6vw, 4.2rem); line-height: 0.9;
+            background: linear-gradient(120deg, var(--pink), #fff 55%, var(--blue)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .genre-all-sub { color: var(--text-muted); font-weight: 600; }
+        .genre-all-cta { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.04em; color: var(--text);
+            display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; border-radius: var(--rf); background: var(--surface-3); border: 1px solid var(--border-2); }
+        @media (max-width: 760px) { .genre-grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+    <!-- background -->
+    <div class="bg-deco"></div>
+    <div class="bg-grid"></div>
+    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
+    <!-- custom cursor -->
+    <div class="cursor-dot"></div><div class="cursor-ring"></div>
+
+    <!-- loader -->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="loader-crown">🐔</div>
+            <div class="loader-word display">CHICKEN KING'S VAULT</div>
+            <div class="loader-track"><div class="loader-fill"></div></div>
+            <div class="loader-pct">0%</div>
+        </div>
+    </div>
+
+    <!-- nav -->
+    <nav class="nav">
+        <a class="brand" href="index.html">
+            <span class="brand-crown" data-logo-egg title="click me 5×…">👑</span>
+            <span class="text-grad">Chicken King's Vault</span>
+        </a>
+        <div class="nav-spacer"></div>
+        <div class="nav-links">
+            <a class="nav-link active" href="index.html">Home</a>
+            <a class="nav-link" href="gamepage.html">All Games</a>
+            <a class="nav-cta" href="gamepage.html?random=1">🎲 Random</a>
+        </div>
+        <button class="nav-burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-menu">
+        <a href="index.html">Home</a>
+        <a href="gamepage.html">All Games</a>
+        <a href="gamepage.html?random=1">🎲 Random</a>
+    </div>
+
+    <!-- HERO -->
+    <header class="hero" data-hero>
+        <div class="hero-left">
+            <span class="hero-eyebrow" data-hero-anim><span class="dot"></span>Last day of school edition 🎒</span>
+            <h1 data-hero-anim>
+                <span class="line">Chicken King's</span>
+                <span class="line vault">Vault</span>
+            </h1>
+            <p class="hero-sub" data-hero-anim>The Chicken King's stash of <b>726 games</b> — unblocked, unleashed, unforgettable. No downloads, no sign-ups, just pure last-day-of-school chaos.</p>
+            <div class="stat-row" data-hero-anim>
+                <div class="stat"><span class="stat-num" data-countup="726">726</span><span class="stat-label">Games</span></div>
+                <div class="stat"><span class="stat-num" data-countup="0">0</span><span class="stat-label">Downloads</span></div>
+                <div class="stat"><span class="stat-num"><span data-countup="100">100</span>%</span><span class="stat-label">Free</span></div>
+            </div>
+            <div class="hero-cta" data-hero-anim>
+                <a class="btn btn-primary btn-lg" href="gamepage.html">Enter the Vault →</a>
+                <button class="btn btn-ghost btn-lg" id="randomBtn">🎲 Surprise me</button>
+            </div>
+        </div>
+        <div class="hero-right">
+            <div class="hero-card" data-tilt>
+                <a class="hero-card-inner" data-tilt-inner href="drivemad.html">
+                    <span class="hero-card-badge">★ FEATURED</span>
+                    <img src="drivemad.png" alt="Drive Mad" width="560" height="420">
+                    <span class="hero-card-shine"></span>
+                    <span class="hero-card-meta">
+                        <span class="hero-card-tag">▶ Play now</span>
+                        <span class="hero-card-name">Drive Mad</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- DOUBLE MARQUEE -->
+    <div class="marquee" aria-hidden="true">
+        <div class="marquee-track">
+            <span class="marquee-item">Drive Mad</span><span class="marquee-item">Subway Surfers</span><span class="marquee-item">Retro Bowl</span><span class="marquee-item">Slope</span><span class="marquee-item">Moto X3M</span><span class="marquee-item">Cookie Clicker</span><span class="marquee-item">8 Ball Classic</span><span class="marquee-item">Geometry Dash</span><span class="marquee-item">Cluster Rush</span><span class="marquee-item">Basket Bros</span><span class="marquee-item">Tomb of the Mask</span><span class="marquee-item">Burrito Bison</span>
+            <span class="marquee-item">Drive Mad</span><span class="marquee-item">Subway Surfers</span><span class="marquee-item">Retro Bowl</span><span class="marquee-item">Slope</span><span class="marquee-item">Moto X3M</span><span class="marquee-item">Cookie Clicker</span><span class="marquee-item">8 Ball Classic</span><span class="marquee-item">Geometry Dash</span><span class="marquee-item">Cluster Rush</span><span class="marquee-item">Basket Bros</span><span class="marquee-item">Tomb of the Mask</span><span class="marquee-item">Burrito Bison</span>
+        </div>
+    </div>
+    <div class="marquee rev" aria-hidden="true">
+        <div class="marquee-track">
+            <span class="marquee-item">Platformer</span><span class="marquee-item">RPG</span><span class="marquee-item">Puzzle</span><span class="marquee-item">Racing</span><span class="marquee-item">Shooter</span><span class="marquee-item">Horror</span><span class="marquee-item">Action</span><span class="marquee-item">Sports</span><span class="marquee-item">Idle</span><span class="marquee-item">.io</span><span class="marquee-item">Sandbox</span><span class="marquee-item">Rhythm</span>
+            <span class="marquee-item">Platformer</span><span class="marquee-item">RPG</span><span class="marquee-item">Puzzle</span><span class="marquee-item">Racing</span><span class="marquee-item">Shooter</span><span class="marquee-item">Horror</span><span class="marquee-item">Action</span><span class="marquee-item">Sports</span><span class="marquee-item">Idle</span><span class="marquee-item">.io</span><span class="marquee-item">Sandbox</span><span class="marquee-item">Rhythm</span>
+        </div>
+    </div>
+
+    <!-- HIGHLIGHTS -->
+    <section class="section">
+        <div class="section-head reveal">
+            <span class="eyebrow">✦ Hand-picked</span>
+            <h2 class="section-title text-grad">The Heavy Hitters</h2>
+        </div>
+        <div class="highlights-grid">
+            <div class="hl-feature reveal">
+                <a class="hl-card" href="subwaysurfers.html">
+                    <img src="subwaysurfers.png" alt="Subway Surfers" loading="lazy">
+                    <span class="hl-overlay"><span class="hl-genre">Platformer · #1 most played</span><span class="hl-name display">Subway Surfers</span></span>
+                </a>
+            </div>
+            <div class="hl-2x2">
+                <a class="hl-card reveal d1" href="retrobowl.html"><img src="retrobowl.png" alt="Retro Bowl" loading="lazy"><span class="hl-overlay"><span class="hl-genre">Sports</span><span class="hl-name display">Retro Bowl</span></span></a>
+                <a class="hl-card reveal d2" href="motox3m.html"><img src="motox3m.png" alt="Moto X3M" loading="lazy"><span class="hl-overlay"><span class="hl-genre">Racing</span><span class="hl-name display">Moto X3M</span></span></a>
+                <a class="hl-card reveal d3" href="clusterrush.html"><img src="clusterrush.jpg" alt="Cluster Rush" loading="lazy"><span class="hl-overlay"><span class="hl-genre">Platformer</span><span class="hl-name display">Cluster Rush</span></span></a>
+                <a class="hl-card reveal d4" href="geometrydashlite.html"><img src="geometrydashlite.png" alt="Geometry Dash Lite" loading="lazy"><span class="hl-overlay"><span class="hl-genre">Rhythm</span><span class="hl-name display">Geometry Dash</span></span></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- GENRES -->
+    <section class="section">
+        <div class="section-head reveal">
+            <span class="eyebrow">✦ Pick your poison</span>
+            <h2 class="section-title text-grad">Browse by Genre</h2>
+        </div>
+        <div class="genre-grid">
+            <a class="genre-card reveal"    href="gamepage.html?cat=Platformer" style="--accent:#FFD700"><span class="genre-emoji">🏃</span><span class="genre-name">Platformer</span><span class="genre-count"><b>90</b> games</span></a>
+            <a class="genre-card reveal d1" href="gamepage.html?cat=RPG"        style="--accent:#00F5A0"><span class="genre-emoji">🐉</span><span class="genre-name">RPG</span><span class="genre-count"><b>66</b> games</span></a>
+            <a class="genre-card reveal d2" href="gamepage.html?cat=Puzzle"     style="--accent:#00D4FF"><span class="genre-emoji">🧩</span><span class="genre-name">Puzzle</span><span class="genre-count"><b>49</b> games</span></a>
+            <a class="genre-card reveal d3" href="gamepage.html?cat=Racing"     style="--accent:#FF2D78"><span class="genre-emoji">🏎️</span><span class="genre-name">Racing</span><span class="genre-count"><b>41</b> games</span></a>
+            <a class="genre-card reveal"    href="gamepage.html?cat=Shooter"    style="--accent:#FF7A3D"><span class="genre-emoji">🔫</span><span class="genre-name">Shooter</span><span class="genre-count"><b>38</b> games</span></a>
+            <a class="genre-card reveal d1" href="gamepage.html?cat=Horror"     style="--accent:#9B5DE5"><span class="genre-emoji">👻</span><span class="genre-name">Horror</span><span class="genre-count"><b>37</b> games</span></a>
+            <a class="genre-card reveal d2" href="gamepage.html?cat=Action"     style="--accent:#FF4D6D"><span class="genre-emoji">⚔️</span><span class="genre-name">Action</span><span class="genre-count"><b>33</b> games</span></a>
+            <a class="genre-card reveal d3" href="gamepage.html?cat=Sports"     style="--accent:#4DF0C0"><span class="genre-emoji">⚽</span><span class="genre-name">Sports</span><span class="genre-count"><b>26</b> games</span></a>
+        </div>
+        <div class="genre-all reveal">
+            <a class="genre-all-card" href="gamepage.html">
+                <span class="genre-all-left">
+                    <span class="genre-all-k">All 726 Games</span>
+                    <span class="genre-all-sub">Every single one. Search it, filter it, get lost in it.</span>
+                </span>
+                <span class="genre-all-cta">Open the Vault →</span>
+=======
+    <title>🐔 Chicken King's Vault</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4947572462455913"
+     crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red:    #ff6b6b;
+            --green:  #6bffb8;
+            --blue:   #6bb5ff;
+            --yellow: #ffd86b;
+            --bg:     #0f0f13;
+            --surface: rgba(255,255,255,0.04);
+            --border:  rgba(255,255,255,0.08);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* BG grid */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(107,181,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(107,181,255,0.025) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Ambient glow blobs */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(110px);
+            opacity: 0.11;
+            pointer-events: none;
+            z-index: 0;
+            animation: drift 16s ease-in-out infinite alternate;
+        }
+        .blob-1 { width: 520px; height: 520px; background: var(--red);   top: -160px; left: -160px; animation-delay: 0s; }
+        .blob-2 { width: 420px; height: 420px; background: var(--blue);  bottom: -120px; right: -120px; animation-delay: -5s; }
+        .blob-3 { width: 320px; height: 320px; background: var(--green); top: 45%; left: 55%; animation-delay: -10s; }
+
+        @keyframes drift {
+            0%   { transform: translate(0, 0); }
+            100% { transform: translate(28px, 18px); }
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 20px;
+            gap: 10px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(15,15,19,0.72);
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Top gradient accent line */
+        nav::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--red), var(--blue), var(--red));
+            background-size: 200% 100%;
+            animation: shimmer 5s linear infinite;
+        }
+        @keyframes shimmer {
+            0%   { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.93rem;
+            padding: 8px 22px;
+            border-radius: 40px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+            letter-spacing: 0.02em;
+        }
+        nav a:hover {
+            background: rgba(255,255,255,0.09);
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+        }
+        nav a.active {
+            background: linear-gradient(135deg, var(--red), var(--blue));
+            border-color: transparent;
+            box-shadow: 0 4px 18px rgba(255,107,107,0.25);
+        }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 88px 20px 64px;
+            max-width: 720px;
+        }
+        .hero-emoji {
+            font-size: 5.5rem;
+            display: block;
+            margin-bottom: 20px;
+            animation: bob 3.2s ease-in-out infinite;
+            filter: drop-shadow(0 8px 24px rgba(255,107,107,0.35));
+        }
+        @keyframes bob {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-14px) rotate(2deg); }
+        }
+        .hero h1 {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(3rem, 9vw, 6.5rem);
+            letter-spacing: 3px;
+            line-height: 0.95;
+            background: linear-gradient(135deg, var(--red) 0%, #fff 45%, var(--blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 18px;
+        }
+        .hero p {
+            color: rgba(255,255,255,0.55);
+            font-size: 1.1rem;
+            margin-bottom: 38px;
+            line-height: 1.6;
+        }
+
+        /* ── STAT PILLS ── */
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
+        }
+        .stat-pill {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 10px 22px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.75);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .stat-pill .pill-icon { font-size: 1rem; }
+        .stat-pill .pill-num {
+            background: linear-gradient(135deg, var(--red), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1rem;
+        }
+
+        /* ── CTA BUTTONS ── */
+        .cta-row {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--red) 0%, var(--blue) 100%);
+            box-shadow: 0 6px 28px rgba(255,107,107,0.35);
+            transition: all 0.25s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .cta-btn:hover {
+            transform: translateY(-4px) scale(1.04);
+            box-shadow: 0 14px 40px rgba(255,107,107,0.5);
+        }
+        .cta-btn.secondary {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-size: 1.3rem;
+            box-shadow: none;
+            color: rgba(255,255,255,0.8);
+        }
+        .cta-btn.secondary:hover {
+            background: rgba(255,255,255,0.09);
+            border-color: rgba(255,255,255,0.22);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            color: #fff;
+        }
+
+        /* ── FEATURED SECTION ── */
+        .featured-section {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 28px 70px;
+        }
+        .section-label {
+            font-family: 'Bangers', cursive;
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.45);
+            margin-bottom: 22px;
+            text-align: center;
+        }
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+        @media (max-width: 900px) { .featured-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 580px) { .featured-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        .feat-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.88rem;
+            text-align: center;
+            gap: 10px;
+            position: relative;
+        }
+        .feat-card-img-wrap {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            box-shadow: 0 6px 22px rgba(0,0,0,0.55);
+            aspect-ratio: 1;
+            transition: box-shadow 0.28s ease, transform 0.28s ease;
+            background: #1a1a22;
+        }
+        .feat-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.32s ease;
+        }
+        /* Overlay on hover */
+        .feat-card-img-wrap::after {
+            content: '▶ Play';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bangers', cursive;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            color: #fff;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(2px);
+            opacity: 0;
+            transition: opacity 0.22s ease;
+            border-radius: 14px;
+        }
+        .feat-card:hover .feat-card-img-wrap {
+            box-shadow: 0 14px 40px rgba(107,181,255,0.28);
+            transform: translateY(-8px);
+        }
+        .feat-card:hover img {
+            transform: scale(1.06);
+        }
+        .feat-card:hover .feat-card-img-wrap::after {
+            opacity: 1;
+        }
+        .feat-card span {
+            color: rgba(255,255,255,0.8);
+            transition: color 0.2s;
+            line-height: 1.3;
+        }
+        .feat-card:hover span { color: #fff; }
+
+        /* ── CATEGORY STRIP ── */
+        .cat-section {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 28px 70px;
+        }
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        @media (max-width: 700px) { .cat-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        .cat-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            text-decoration: none;
+            color: rgba(255,255,255,0.75);
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        .cat-card:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(107,181,255,0.3);
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        .cat-icon {
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+        .cat-info {}
+        .cat-name { font-weight: 800; color: #fff; }
+        .cat-count { font-size: 0.75rem; color: rgba(255,255,255,0.4); font-weight: 600; }
+
+        /* ── FOOTER ── */
+        footer {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            padding: 18px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            text-align: center;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.83rem;
+            line-height: 1.7;
+        }
+        footer a { color: rgba(255,255,255,0.65); text-decoration: none; }
+        footer a:hover { color: #fff; }
+        footer strong { color: rgba(255,255,255,0.85); }
+    </style>
+    <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <nav>
+        <a href="index.html" class="active">Home</a>
+        <a href="gamepage.html">Games</a>
+    </nav>
+
+    <section class="hero">
+        <span class="hero-emoji">🍔</span>
+        <h1>Chicken King's Vault</h1>
+        <p>Chicken King's favourite games — all in one place.<br>No downloads, no sign-ups, just vibes.</p>
+        <div class="stats-row">
+            <div class="stat-pill"><span class="pill-icon">🎮</span><span class="pill-num">726</span> Games</div>
+            <div class="stat-pill"><span class="pill-icon">🆓</span> Free to Play</div>
+            <div class="stat-pill"><span class="pill-icon">⚡</span> No Downloads</div>
+        </div>
+        <div class="cta-row">
+            <a href="gamepage.html" class="cta-btn">Browse All Games →</a>
+            <button class="cta-btn secondary" id="randomBtn">🎲 Random</button>
+        </div>
+    </section>
+
+    <section class="featured-section">
+        <div class="section-label">✦ Highlights ✦</div>
+        <div class="featured-grid">
+            <a class="feat-card" href="fnae.html">
+                <div class="feat-card-img-wrap"><img src="fnae.png" alt="Five Nights at Epstein's"></div>
+                <span>Five Nights at Epstein's</span>
+            </a>
+            <a class="feat-card" href="drivemad.html">
+                <div class="feat-card-img-wrap"><img src="drivemad.png" alt="Drive Mad"></div>
+                <span>Drive Mad</span>
+            </a>
+            <a class="feat-card" href="basketbros.html">
+                <div class="feat-card-img-wrap"><img src="basketbros.jpg" alt="Basket Bros"></div>
+                <span>Basket Bros</span>
+            </a>
+            <a class="feat-card" href="8 Ball Classic.html">
+                <div class="feat-card-img-wrap"><img src="8ballclassic.png" alt="8 Ball Classic"></div>
+                <span>8 Ball Classic</span>
+            </a>
+            <a class="feat-card" href="Stick-Fight-2.html">
+                <div class="feat-card-img-wrap"><img src="stick-fight.png" alt="Stick Fight"></div>
+                <span>Stick Fight</span>
+>>>>>>> 4fd17980669247abd517e3fe4f59e499cfa12486
+            </a>
+        </div>
+    </section>
+
+<<<<<<< HEAD
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo"><span class="footer-chicken" data-footer-chicken title="poke me 3×">🐔</span> <span class="text-grad">Chicken King's Vault</span></span>
+                <p class="footer-tag">726 free browser games. No downloads, no sign-ups, just vibes. Built for the back row.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <a href="gamepage.html">All Games</a>
+                <a href="gamepage.html?cat=Platformer">Platformer</a>
+                <a href="gamepage.html?cat=Horror">Horror</a>
+                <a href="gamepage.html?random=1">🎲 Random Game</a>
+            </div>
+            <div class="footer-col">
+                <h4>Top Picks</h4>
+                <a href="drivemad.html">Drive Mad</a>
+                <a href="subwaysurfers.html">Subway Surfers</a>
+                <a href="retrobowl.html">Retro Bowl</a>
+                <a href="cookieclicker.html">Cookie Clicker</a>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <span><strong>Chicken King's Vault</strong> · 726 games · No downloads ever</span>
+            <span><strong>Credits:</strong> GN-Math · TruffledUBG · Ultimate Game Stash · OfficialArrowNet</span>
+        </div>
+    </footer>
+
+    <!-- shared egg furniture -->
+    <div class="toast-wrap"></div>
+    <div class="fly-chicken" data-fly-chicken aria-hidden="true">🐔</div>
+    <div class="idle-bubble" data-idle aria-hidden="true">
+        <span class="speech">yo… still there? 👀</span>
+        <span class="crown">👑</span>
+    </div>
+    <div class="confirm-overlay" data-confirm>
+        <div class="confirm-box">
+            <h3>you sure? 🤔</h3>
+            <p>last day of school… you really wanna start <em>this</em> game right now?</p>
+            <div class="confirm-actions">
+                <button class="btn btn-primary" data-confirm-yes>Let's go 🎮</button>
+                <button class="btn btn-ghost" data-confirm-no>Nah</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- runtime -->
+    <script src="vault.js" defer></script>
+    <script>
+        // Instant random across a deep curated pool (no extra page load).
+        (function () {
+            var pool = ['drivemad.html','subwaysurfers.html','retrobowl.html','slope1.html','motox3m.html',
+                'cookieclicker.html','8 Ball Classic.html','geometrydashlite.html','clusterrush.html','basketbros.html',
+                'tombofthemask.html','burritobison.html','vex1.html','amongus.html','agario.html','bitlife.html',
+                'bloxorzgame.html','baconmaydie.html','bladeball.html','basketballstars.html','1on1soccer.html',
+                '2048game.html','angrybirds.html','baldisbasics.html','backroomsgame.html','boxingrandom.html',
+                'awesometanks2.html','balatrogame.html','blockblast.html','fnae.html'];
+            var btn = document.getElementById('randomBtn');
+            if (btn) btn.addEventListener('click', function () {
+                window.location.href = pool[Math.floor(Math.random() * pool.length)];
+            });
+        })();
+=======
+    <section class="cat-section">
+        <div class="section-label">Browse by Genre</div>
+        <div class="cat-grid">
+            <a class="cat-card" href="gamepage.html?cat=Platformer">
+                <span class="cat-icon">🏃</span>
+                <div class="cat-info"><div class="cat-name">Platformer</div><div class="cat-count">90 games</div></div>
+            </a>
+            <a class="cat-card" href="gamepage.html?cat=RPG">
+                <span class="cat-icon">🐉</span>
+                <div class="cat-info"><div class="cat-name">RPG</div><div class="cat-count">66 games</div></div>
+            </a>
+            <a class="cat-card" href="gamepage.html?cat=Puzzle">
+                <span class="cat-icon">🧩</span>
+                <div class="cat-info"><div class="cat-name">Puzzle</div><div class="cat-count">49 games</div></div>
+            </a>
+            <a class="cat-card" href="gamepage.html?cat=Racing">
+                <span class="cat-icon">🏎️</span>
+                <div class="cat-info"><div class="cat-name">Racing</div><div class="cat-count">41 games</div></div>
+            </a>
+            <a class="cat-card" href="gamepage.html?cat=Shooter">
+                <span class="cat-icon">🔫</span>
+                <div class="cat-info"><div class="cat-name">Shooter</div><div class="cat-count">38 games</div></div>
+            </a>
+            <a class="cat-card" href="gamepage.html?cat=Horror">
+                <span class="cat-icon">👻</span>
+                <div class="cat-info"><div class="cat-name">Horror</div><div class="cat-count">37 games</div></div>
+            </a>
+            <a class="cat-card" href="gamepage.html?cat=Action">
+                <span class="cat-icon">⚔️</span>
+                <div class="cat-info"><div class="cat-name">Action</div><div class="cat-count">33 games</div></div>
+            </a>
+            <a class="cat-card" href="gamepage.html?cat=Sports">
+                <span class="cat-icon">⚽</span>
+                <div class="cat-info"><div class="cat-name">Sports</div><div class="cat-count">26 games</div></div>
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <strong>Chicken King's Vault</strong> · 726 free games · No downloads ever<br>
+        <strong>Credits:</strong> GN-Math · Truffled · Ultimate Game Stash · OfficialArrowNet
+    </footer>
+
+    <script>
+        // Random game button — picks one of the game wrapper pages
+        const gameLinks = [
+            'drivemad.html','basketbros.html','fnae.html','Stick-Fight-2.html',
+            '8 Ball Classic.html','1on1soccer.html','2048game.html','agario.html',
+            'amongus.html','angrybirds.html','baconmaydie.html','bladeball.html',
+            'bloxorzgame.html','basketballstars.html','bindingofisaac.html',
+            'adventurecapitalist.html','baldisbasics.html','bitlife.html',
+            'backroomsgame.html','baseballbros.html','boxingrandom.html',
+            'adanceoffireandice.html','asteroidsgame.html','awesometanks2.html',
+            'balatrogame.html','blockblast.html','blockpostgame.html'
+        ];
+        document.getElementById('randomBtn').addEventListener('click', () => {
+            const pick = gameLinks[Math.floor(Math.random() * gameLinks.length)];
+            window.location.href = pick;
+        });
+>>>>>>> 4fd17980669247abd517e3fe4f59e499cfa12486
+    </script>
+</body>
+</html>

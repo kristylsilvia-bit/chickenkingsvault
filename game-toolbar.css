@@ -1,0 +1,269 @@
+<<<<<<< HEAD
+/* ============================================================================
+   CHICKEN KING'S VAULT — in-game toolbar (shared by all 727 game pages)
+   Matches the vault.css design system. Self-contained (loads its own fonts).
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@600;700;800&display=swap');
+
+:root {
+    --bg:      #05050a;
+    --pink:    #FF2D78;
+    --blue:    #00D4FF;
+    --purple:  #9B5DE5;
+    --gold:    #FFD700;
+    --surface: rgba(255,255,255,0.05);
+    --border:  rgba(255,255,255,0.10);
+    --border-2:rgba(255,255,255,0.18);
+    --text:    #f5f6ff;
+    --toolbar-h: 56px;
+=======
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@700;800&display=swap');
+
+:root {
+    --red:    #ff6b6b;
+    --blue:   #6bb5ff;
+    --bg:     #0d0d11;
+    --surface: rgba(255,255,255,0.05);
+    --border:  rgba(255,255,255,0.09);
+    --toolbar-h: 54px;
+>>>>>>> 4fd17980669247abd517e3fe4f59e499cfa12486
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+<<<<<<< HEAD
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    overflow: hidden;
+    color: var(--text);
+}
+
+html, body, canvas { touch-action: none; }
+
+=======
+    font-family: 'Nunito', system-ui, sans-serif;
+    background: var(--bg);
+    overflow: hidden;
+}
+
+>>>>>>> 4fd17980669247abd517e3fe4f59e499cfa12486
+/* ─── TOOLBAR ─────────────────────────────────────────────────────────── */
+.toolbar {
+    display: flex;
+    align-items: center;
+<<<<<<< HEAD
+    gap: 12px;
+    padding: 0 16px;
+    height: var(--toolbar-h);
+    background: rgba(8, 8, 16, 0.92);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+=======
+    gap: 10px;
+    padding: 0 14px;
+    height: var(--toolbar-h);
+    background: rgba(13, 13, 17, 0.97);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+>>>>>>> 4fd17980669247abd517e3fe4f59e499cfa12486
+    position: relative;
+    z-index: 10;
+    flex-shrink: 0;
+}
+
+<<<<<<< HEAD
+/* animated neon line at the very top */
+=======
+/* Subtle animated gradient line at very top */
+>>>>>>> 4fd17980669247abd517e3fe4f59e499cfa12486
+.toolbar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+<<<<<<< HEAD
+    background: linear-gradient(90deg, var(--pink), var(--blue), var(--purple), var(--pink));
+    background-size: 220% 100%;
+    animation: ckv-shimmer 6s linear infinite;
+}
+@keyframes ckv-shimmer { 0% { background-position: 0% 0; } 100% { background-position: 220% 0; } }
+=======
+    background: linear-gradient(90deg, var(--red), var(--blue), var(--red));
+    background-size: 200% 100%;
+    animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+    0%   { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+}
+>>>>>>> 4fd17980669247abd517e3fe4f59e499cfa12486
+
+/* Vault back-link */
+.vault-logo {
+    display: flex;
+    align-items: center;
+<<<<<<< HEAD
+    gap: 7px;
+    text-decoration: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.35rem;
+    letter-spacing: 0.06em;
+    color: #fff;
+    white-space: nowrap;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(255,45,120,0.16), rgba(0,212,255,0.16));
+    border: 1px solid var(--border-2);
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease, border-color 0.2s ease;
+    flex-shrink: 0;
+}
+.vault-logo:hover {
+    transform: translateY(-1px) scale(1.03);
+    border-color: var(--blue);
+    box-shadow: 0 0 22px rgba(0,212,255,0.35);
+}
+
+.toolbar-sep { width: 1px; height: 22px; background: var(--border); flex-shrink: 0; }
+
+.game-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 0.98rem;
+    letter-spacing: 0.01em;
+    color: rgba(245, 246, 255, 0.9);
+=======
+    gap: 6px;
+    text-decoration: none;
+    font-family: 'Bangers', cursive;
+    font-size: 1.25rem;
+    letter-spacing: 1px;
+    color: #fff;
+    white-space: nowrap;
+    padding: 5px 13px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, rgba(255,107,107,0.12), rgba(107,181,255,0.12));
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    flex-shrink: 0;
+}
+
+.vault-logo:hover {
+    background: linear-gradient(135deg, rgba(255,107,107,0.28), rgba(107,181,255,0.28));
+    border-color: rgba(107,181,255,0.45);
+    transform: translateY(-1px);
+}
+
+/* Divider */
+.toolbar-sep {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+    flex-shrink: 0;
+}
+
+/* Game name */
+.game-name {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.02em;
+>>>>>>> 4fd17980669247abd517e3fe4f59e499cfa12486
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+<<<<<<< HEAD
+.toolbar-spacer { flex: 1; }
+
+=======
+/* Spacer pushes buttons to the right */
+.toolbar-spacer {
+    flex: 1;
+}
+
+/* Fullscreen button */
+>>>>>>> 4fd17980669247abd517e3fe4f59e499cfa12486
+.fs-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+<<<<<<< HEAD
+    color: rgba(245, 246, 255, 0.8);
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.84rem;
+    padding: 8px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.fs-btn:hover {
+    color: #fff;
+    border-color: var(--gold);
+    box-shadow: 0 0 22px rgba(255,215,0,0.35);
+    transform: translateY(-1px);
+}
+.fs-btn:active { transform: translateY(0); }
+
+#homeBtn { display: none !important; }
+=======
+    color: rgba(255, 255, 255, 0.75);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 6px 15px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.fs-btn:hover {
+    background: linear-gradient(135deg, rgba(255,107,107,0.18), rgba(107,181,255,0.18));
+    border-color: rgba(107,181,255,0.45);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.fs-btn:active {
+    transform: translateY(0);
+}
+
+/* Hidden legacy home button (JS still references it) */
+#homeBtn {
+    display: none !important;
+}
+>>>>>>> 4fd17980669247abd517e3fe4f59e499cfa12486
+
+/* ─── GAME FRAME ──────────────────────────────────────────────────────── */
+.frame-wrapper {
+    height: calc(100vh - var(--toolbar-h));
+    background: #000;
+    display: flex;
+}
+<<<<<<< HEAD
+iframe { border: 0; width: 100%; height: 100%; display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+    .toolbar::before { animation: none; }
+    .vault-logo, .fs-btn { transition: none; }
+=======
+
+iframe {
+    border: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+>>>>>>> 4fd17980669247abd517e3fe4f59e499cfa12486
+}
